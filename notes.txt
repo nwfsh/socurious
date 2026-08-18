@@ -1,0 +1,14 @@
+steps avery took
+
+// started database server
+brew services start postgresql@16
+
+// created a database for this project
+createdb question_pipeline
+
+// to open and look inside
+psql question_pipeline, now ur inside 
+
+// cehck if there is any relations
+write /dt 
+
