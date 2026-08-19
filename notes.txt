@@ -12,3 +12,21 @@ psql question_pipeline, now ur inside
 // cehck if there is any relations
 write /dt 
 
+// avery then created a schema 
+
+hiccups : reddit banned easy distrbution of reddit API in 2026 so now 
+i have to do RSS to find whats up, they only let me build things FOR them 
+
+used : RSS parser instead, lets me pull up a few posts at a time instead 
+
+decided against : scrapping too risky 
+
+RSS gives you title, a snippet/summary, link, and post date —
+ but not full post body text reliably, not comment threads, and 
+ typically only recent posts (not deep historical pulls).
+
+ averychong@Averys-MacBook-Pro ~ % python3 -m venv venv
+averychong@Averys-MacBook-Pro ~ % source venv/bin/activate
+(venv) averychong@Averys-MacBook-Pro ~ % pip install feedparser requests
+
+what i also installed 
