@@ -9,6 +9,8 @@ REDDIT_RSS_URL = "https://www.reddit.com/r/{subreddit}/new/.rss"
 # adding user_agent since reddit blocks user agents 
 USER_AGENT = "socurious-pipeline/0.1 (personal project, read-only RSS)"
 
+# for me to put my list 
+subreddits = ["AskReddit",]
 
 @dataclass
 class RawPost:
@@ -62,3 +64,15 @@ def _extract_post_id(link: str) -> str:
     if len(parts) > 1:
         return parts[1].split("/")[0]
     return link
+
+
+# if __name__ == "__main__" means only run this code if this file was executed directly — 
+# not if it was imported somewhere else
+# so this function only runs if you call this specific file, aka 
+# reddit_rss.py, then it sets the name to __main__ and runs it 
+if __name__ == "__main__":
+    adapter = RedditRSSAdapter([subreddits])
+    posts = adapter.fetch_all()
+    print(f"Fetched {len(posts)} posts\n")
+    for p in posts[:5]:
+        print(f"[{p.post_id}] {p.title}")
