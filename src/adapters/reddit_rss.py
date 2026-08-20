@@ -10,7 +10,7 @@ REDDIT_RSS_URL = "https://www.reddit.com/r/{subreddit}/new/.rss"
 USER_AGENT = "socurious-pipeline/0.1 (personal project, read-only RSS)"
 
 # for me to put my list 
-subreddits = ["AskReddit",]
+subreddits = ["r/AskReddit","r/TooAfraidToAsk","r/RandomQuestion", "r/TooAfraidToAsk", "r/NoStupidQuestions"]
 
 @dataclass
 class RawPost:

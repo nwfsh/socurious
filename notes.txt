@@ -30,3 +30,16 @@ averychong@Averys-MacBook-Pro ~ % source venv/bin/activate
 (venv) averychong@Averys-MacBook-Pro ~ % pip install feedparser requests
 
 what i also installed 
+
+AVERY QUICK REDDIT LIST:
+r/AskReddit - very random, will range 
+r/TooAfraidToAsk - ethics and morality sub category may not be able to reach
+r/AskMen - pick BEST questions sorting tab 
+r/AskWomen - pick NEW questions sorting tab 
+r/TooAfraidToAsk
+r/NoStupidQuestions
+r/questions
+
+No using I, filter out the Is 
+For -> 
+Filter out the MEs too 
