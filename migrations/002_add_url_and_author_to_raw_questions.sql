@@ -2,3 +2,4 @@
 
 ALTER TABLE raw_questions ADD COLUMN url TEXT;
 ALTER TABLE raw_questions ADD COLUMN author TEXT;
+

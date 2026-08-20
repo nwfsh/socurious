@@ -76,3 +76,4 @@ if __name__ == "__main__":
     print(f"Fetched {len(posts)} posts\n")
     for p in posts[:5]:
         print(f"[{p.post_id}] {p.title}")
+
