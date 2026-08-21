@@ -44,3 +44,5 @@ changes to downstream transform, classification, dedup, or load logic.
 - If official Data API access is later approved, may be worth migrating
   back for richer data — the `RedditDataSource` interface makes this a
   contained change, not a rebuild
+
+  "RSS is rate-limited to ~1 req/min globally, so a full source sweep takes ~6 min; acceptable for scheduled runs, and fetch is decoupled from transform so development doesn't require re-fetching." T

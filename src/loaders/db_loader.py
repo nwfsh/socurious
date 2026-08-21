@@ -1,5 +1,6 @@
 import psycopg
 from src.adapters.reddit_rss import RedditRSSAdapter 
+import time 
 
 #psycopg is a python library that allows u to connect
 # postgres to python code, for u to run sql commands in python 
@@ -7,10 +8,31 @@ from src.adapters.reddit_rss import RedditRSSAdapter
 # connect to the database 
 conn = psycopg.connect("dbname=question_pipeline user=averychong")
 
-#run a query
-result = conn.execute("SELECT * FROM sources")
+# grab sources from database 
+sources = conn.execute("SELECT id,name FROM sources").fetchall()
 
-for row in result:
-    print(row)
+# PLS COMPLETE QUERY 
+for source_id, source_name in sources:
+    subreddit = source_name
+    adapter = RedditRSSAdapter([subreddit])
+    posts = adapter.fetch_all()
+    print(f"{source_name}: fetched {len(posts)}")
+    time.sleep(65)
+    for post in posts:
+        conn.execute(
+            """
+            INSERT INTO raw_questions (source_id, post_id, raw_title, url, author)
+            VALUES (%s, %s, %s, %s, %s)
+            ON CONFLICT (source_id, post_id) DO NOTHING
+            """,
+            (source_id, post.post_id, post.title, post.url, post.author),
+        )
+        
+        
+    print(f"{source_name}: fetched {len(posts)}")
 
+        
+
+conn.commit()
 conn.close()
+
