@@ -10,17 +10,17 @@ REDDIT_RSS_URL = "https://www.reddit.com/r/{subreddit}/new/.rss"
 USER_AGENT = "socurious-pipeline/0.1 (personal project, read-only RSS)"
 
 # for me to put my list 
-subreddits = ["r/AskReddit","r/TooAfraidToAsk","r/RandomQuestion", "r/TooAfraidToAsk", "r/NoStupidQuestions"]
+subreddits = ["AskReddit", "TooAfraidToAsk", "RandomQuestion", "NoStupidQuestions"]
 
 @dataclass
 class RawPost:
-    source_name: str    # name of subreddit r/AskReddit 
-    post_id: str        # reddit short post id 
-    author: str | None # reddit username incase of potential problems 
+    source_name: str    # name of subreddit r/AskReddit
+    post_id: str        # reddit short post id
+    author: str | None # reddit username incase of potential problems
     title: str
-    body: str | None
     url: str
     scraped_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
 
 
 class RedditRSSAdapter:
@@ -51,7 +51,6 @@ class RedditRSSAdapter:
                 post_id=_extract_post_id(entry.link),
                 author=author,
                 title=entry.title,
-                body=entry.get("summary") or None,
                 url=entry.link,
             ))
         return posts
