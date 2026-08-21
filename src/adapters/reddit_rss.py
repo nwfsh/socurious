@@ -5,12 +5,9 @@ from datetime import datetime, timezone
 # feedparser is python library that reads and process RSS
 
 
-REDDIT_RSS_URL = "https://www.reddit.com/r/{subreddit}/new/.rss"
+REDDIT_RSS_URL = "https://www.reddit.com/{subreddit}/new/.rss"
 # adding user_agent since reddit blocks user agents 
 USER_AGENT = "socurious-pipeline/0.1 (personal project, read-only RSS)"
-
-# for me to put my list 
-subreddits = ["AskReddit", "TooAfraidToAsk", "RandomQuestion", "NoStupidQuestions"]
 
 @dataclass
 class RawPost:
@@ -20,7 +17,6 @@ class RawPost:
     title: str
     url: str
     scraped_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-
 
 
 class RedditRSSAdapter:
@@ -38,6 +34,9 @@ class RedditRSSAdapter:
     def _fetch(self, subreddit: str) -> list[RawPost]:
         url = REDDIT_RSS_URL.format(subreddit=subreddit)
         feed = feedparser.parse(url, agent=USER_AGENT)
+        print(f"  {url} -> status={getattr(feed, 'status', '?')} entries={len(feed.entries)}")
+
+        
 
         posts = []
         for entry in feed.entries:
@@ -45,9 +44,9 @@ class RedditRSSAdapter:
             if author and author.startswith("/u/"):
                 author = author[3:] # ignores the /u/ and grab the rest of their username
 
-              # how the data is stored work   
+
             posts.append(RawPost(
-                source_name=f"r/{subreddit}",
+                source_name=f"{subreddit}",
                 post_id=_extract_post_id(entry.link),
                 author=author,
                 title=entry.title,
@@ -64,15 +63,4 @@ def _extract_post_id(link: str) -> str:
         return parts[1].split("/")[0]
     return link
 
-
-# if __name__ == "__main__" means only run this code if this file was executed directly — 
-# not if it was imported somewhere else
-# so this function only runs if you call this specific file, aka 
-# reddit_rss.py, then it sets the name to __main__ and runs it 
-if __name__ == "__main__":
-    adapter = RedditRSSAdapter([subreddits])
-    posts = adapter.fetch_all()
-    print(f"Fetched {len(posts)} posts\n")
-    for p in posts[:5]:
-        print(f"[{p.post_id}] {p.title}")
 
