@@ -45,15 +45,12 @@ def review_rule(reason_to_check: str):
 
 if __name__ == "__main__":
     run_analysis()
-    ## review_rule("contains_i") #LOOKS GOOD ## rejected 39, 1 false positives 
+    review_rule("contains_i") #LOOKS GOOD ## rejected 39, 1 false positives 
     #review_rule("too_short") # LOOKS good, rejected 7, no false positives 
     ## review_rule("contain_hate_speech") ill reavulate that
     ## review_rule("contains_me") # 5 inside, 1 false positive 
-    review_rule("contains_certain_group") ## might need to be marked for manual review 
+    ## review_rule("contains_certain_group") ## might need to be marked for manual review 
+    ## review_rule("not_a_question") ## ~15/18 correct, ~2-3 borderline/false positives, ~83-90% precision
+    ## review_rule("contains_my") # 5/7 correct, 2/7 false positives — ~71% precision.
 
-# Total: 575
-# contains_i: 39
-# is_profanity: 26
-# not_a_question: 15
-# not_english: 14
-# too_short: 7
+# 624 total, 82 rejected, ~13% rejection rate, ~87% kept.

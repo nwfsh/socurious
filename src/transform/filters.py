@@ -18,10 +18,13 @@ def extract_question(text: str) -> str | None:
 
 
 def contains_i_pronoun(title:str) -> bool:
-    return bool(re.search(r'\bI\b', title))
+    return bool(re.search(r'\bI\b', title, re.IGNORECASE))
 
 def contains_me_pronoun(title: str) -> bool:
     return bool(re.search(r'\bme\b', title))
+
+def contains_my_pronoun(title: str) -> bool:
+    return bool(re.search(r'\bmy\b', title, re.IGNORECASE))
 
 # want better questions + not dumb and surface ones 
 def is_too_short(title: str, min_words: int = 4) -> bool:
@@ -57,6 +60,9 @@ def should_reject(title: str) -> tuple[bool, str | None]:
         return True, "contains_i"
     if contains_me_pronoun(title):
         return True, "contains_me"
+
+    if contains_my_pronoun(title):
+        return True, "contains_my"
     if targets_specific_group(title):
         return True, "contains_certain_group"
         
