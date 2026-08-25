@@ -1,42 +1,43 @@
+import os
 import psycopg
 from collections import Counter
 from src.transform.filters import should_reject
 
 def load_clean_questions():
-    conn = psycopg.connect(
-    dbname=os.getenv("DB_NAME"),
-    user=os.getenv("DB_USER"),
-    host=os.getenv("DB_HOST"),
-    port=os.getenv("DB_PORT"),
-)
-    rows = conn.execute(
-        "SELECT id, raw_title FROM raw_questions WHERE question_id IS NULL"
-    ).fetchall()
+    with psycopg.connect(
+        dbname=os.getenv("DB_NAME"),
+        user=os.getenv("DB_USER"),
+        host=os.getenv("DB_HOST"),
+        port=os.getenv("DB_PORT"),
+    ) as conn:
+        rows = conn.execute(
+            "SELECT id, raw_title FROM raw_questions WHERE question_id IS NULL"
+            ## wont proccess raw questions where they already have a question id 
+        ).fetchall()
 
-    kept = 0
-    rejected_reasons = Counter()
+        kept = 0
+        rejected_reasons = Counter()
 
-    for raw_id, title in rows:
-        rejected, reason = should_reject(title)
-        if rejected:
-            rejected_reasons[reason] += 1
-            continue
+        for raw_id, title in rows:
+            rejected, reason = should_reject(title)
+            if rejected:
+                rejected_reasons[reason] += 1
+                continue
 
-        result = conn.execute(
-            """INSERT INTO questions (raw_question_id, text, severity)
-               VALUES (%s, %s, %s) RETURNING id""",
-            (raw_id, title, 1)
-        )
-        question_id = result.fetchone()[0]
+            result = conn.execute(
+                """INSERT INTO questions (raw_question_id, text, severity)
+                   VALUES (%s, %s, %s) RETURNING id""",
+                (raw_id, title, 1)  # severity=1 placeholder until classification is added
+            )
+            question_id = result.fetchone()[0]
 
-        conn.execute(
-            "UPDATE raw_questions SET question_id = %s WHERE id = %s",
-            (question_id, raw_id)
-        )
-        kept += 1
+            conn.execute(
+                "UPDATE raw_questions SET question_id = %s WHERE id = %s",
+                (question_id, raw_id) ## now raw_question will not reproccess as they use this as indicator 
+            )
+            kept += 1
 
-    conn.commit()
-    conn.close()
+        conn.commit()
 
     print(f"Processed: {len(rows)}")
     print(f"Kept: {kept}")
