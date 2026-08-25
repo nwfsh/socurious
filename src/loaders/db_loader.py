@@ -38,6 +38,7 @@ for source_id, source_name in sources:
             VALUES (%s, %s, %s, %s, %s)
             ON CONFLICT (source_id, post_id) DO NOTHING
             """,
+            ##  old posts wont get inserted into database
             (source_id, post.post_id, post.title, post.url, post.author),
         )
         

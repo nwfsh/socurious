@@ -11,7 +11,7 @@ def load_clean_questions():
         port=os.getenv("DB_PORT"),
     ) as conn:
         rows = conn.execute(
-            "SELECT id, raw_title FROM raw_questions WHERE question_id IS NULL"
+            "SELECT id, raw_title FROM raw_questions WHERE question_id IS NULL AND rejection_reason is NULL"
             ## wont proccess raw questions where they already have a question id 
         ).fetchall()
 
@@ -22,6 +22,8 @@ def load_clean_questions():
             rejected, reason = should_reject(title)
             if rejected:
                 rejected_reasons[reason] += 1
+                conn.execute("UPDATE raw_questions SET rejection_reason = %s WHERE id = %s",
+                (reason, raw_id))
                 continue
 
             result = conn.execute(
