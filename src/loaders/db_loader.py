@@ -4,7 +4,7 @@ import time
 import os
 from dotenv import load_dotenv
 from collections import Counter
-import 
+from src.transform.filters import should_reject
 
 
 load_dotenv()
@@ -19,7 +19,6 @@ conn = psycopg.connect(
     host=os.getenv("DB_HOST"),
     port=os.getenv("DB_PORT"),
 )
-
 
 # grab sources from database 
 sources = conn.execute("SELECT id,name FROM sources").fetchall()
@@ -45,9 +44,6 @@ for source_id, source_name in sources:
         
     print(f"{source_name}: fetched {len(posts)}")
 
-reasons: Counter()
-for id, title in raw_rows:
-    rejected, reason = 
 
 
 conn.commit()
