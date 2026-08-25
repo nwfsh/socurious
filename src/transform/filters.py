@@ -1,5 +1,6 @@
 import re
 from langdetect import detect, LangDetectException
+from profanity_check import predict
 
  # also desinging which function should run first to filter out the bad results 
  # and kick off to the next one asap 
@@ -27,14 +28,22 @@ def is_too_short(title: str, min_words: int = 4) -> bool:
     return len(title.strip().split()) < min_words
 
 def targets_specific_group(title: str) -> bool:
-    return "people who" in title.lower()
+    t = title.lower()
+    patterns = ["people who", "for those with", "to the people of", "to those who", " as a "]
+    return any(p in t for p in patterns)
 
-def is_english(title: str) -> bool:
-    try:
-        return detect(title) == "en"
-    except LangDetectException:
-        return False # cant determine language 
+# remove cus less than 0.3% of data, and cannot filter accurately 
+# def is_english(title: str) -> bool:
+#     if len(title.split()) < 4:
+#         return True  # too short to reliably detect, assume English
+#     try:
+#         return detect(title) == "en"
+#     except LangDetectException:
+#         return False
 
+# sub reddit auto filters anything 
+#def contains_hate_speech(title: str) -> bool:
+#    return predict([title])[0] == 1
 
 ## cheap to expensive
 ## also by
@@ -48,7 +57,14 @@ def should_reject(title: str) -> tuple[bool, str | None]:
         return True, "contains_i"
     if contains_me_pronoun(title):
         return True, "contains_me"
-    if not is_english(title):
-        return True, "not_english"
+    if targets_specific_group(title):
+        return True, "contains_certain_group"
+        
+    # if not is_english(title):
+    #     return True, "not_english"
+    # if contains_hate_speech(title):
+    #     return True, "contain_hate_speech"
     return False, None
+
+
     
