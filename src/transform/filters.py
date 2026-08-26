@@ -34,7 +34,7 @@ def is_too_short(title: str, min_words: int = 4) -> bool:
 
 def targets_specific_group(title: str) -> bool:
     t = title.lower()
-    patterns = ["people who", "for those with", "to the people of", "to those who", " as a "]
+    patterns = ["people who", "for those with", "to the people of", "to those who", " as a ", "what are your stories"]
     return any(p in t for p in patterns)
 
 # remove cus less than 0.3% of data, and cannot filter accurately 
