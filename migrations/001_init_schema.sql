@@ -72,6 +72,7 @@ CREATE TABLE question_tags (
 );
 
 -- tracking users and what questions they like or dislike .. 
+-- weak entity relationship to question_id 
 CREATE TABLE question_data (
     user_id      TEXT NOT NULL,
     question_id  INTEGER NOT NULL REFERENCES questions(id) ON DELETE CASCADE,
