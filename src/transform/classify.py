@@ -1,9 +1,13 @@
 from transformers import pipeline
 from question_intimacy.predict_intimacy import IntimacyEstimator
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 ## to decide on topic, zero shot classification 
-topic_classifier = pipeline("zero-shot-classification", model="MoritzLaurer/deberta-v3-base-zeroshot-v1")
+topic_classifier = pipeline("zero-shot-classification", model="MoritzLaurer/deberta-v3-large-zeroshot-v2.0")
+os.environ["HF_TOKEN"] = os.getenv("HF_TOKEN")
 
 ## intamacy score model ( researched backed YAY win for avery)
 intimacy_scorer = IntimacyEstimator(cuda=False)
@@ -14,9 +18,11 @@ categories = [
     "family and childhood",
     "career",
     "fears and insecurities",
-    "values",
-    "hypotheticals",
-    "funny and random"
+    "random everyday questions",
+    "hypothetical scenarios",
+    "sexual",
+    "controversial debate",
+    "advice",
 ]
 
 def classify_topic(title: str) -> tuple[str,float]:
@@ -24,7 +30,10 @@ def classify_topic(title: str) -> tuple[str,float]:
     return result["labels"][0], result["scores"][0]
 
 def classify_intimacy(title: str) -> float:
-    return intimacy_scorer.predict(title, type='list')
+    result = intimacy_scorer.predict(title, type='list')
+    if isinstance(result, list):
+        return result[0]
+    return result
 
 
 # if __name__ == "__main__":
