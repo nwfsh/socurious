@@ -30,10 +30,8 @@ def classify_topic(title: str) -> tuple[str,float]:
     return result["labels"][0], result["scores"][0]
 
 def classify_intimacy(title: str) -> float:
-    result = intimacy_scorer.predict(title, type='list')
-    if isinstance(result, list):
-        return result[0]
-    return result
+    result = intimacy_scorer.predict([title], type='list')
+    return float(result[0])
 
 
 # if __name__ == "__main__":

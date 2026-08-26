@@ -57,6 +57,31 @@ ranking (not necessarily the exact score) matches independent human
 judgment of relative intimacy — same error-analysis process used for
 every other rule in this pipeline (see `docs/transform-best-practices.md`).
 
+## Bug found during validation: `type='list'` requires a list input
+Initial integration passed a bare string to `predict(title, type='list')`.
+This silently produced one score per token/word in the sentence rather
+than one score for the sentence as a whole (e.g. a 5-word question
+returned ~19 scores). Because the code took `result[0]`, every stored
+"intimacy score" was actually the score of roughly the first token,
+not the sentence — producing tightly clustered, near-meaningless
+values (e.g. explicit/vulnerable content scoring the same as mundane
+questions).
+
+Root cause: the package expects a list of sentences even for a single
+input — `predict([title], type='list')`, not `predict(title, type='list')`.
+
+Caught by comparing pipeline output against the paper's own documented
+reference example ("What is this movie?" ≈ -0.27) in isolation, outside
+the pipeline — the isolated call matched the paper closely (-0.29),
+while the in-pipeline output did not, pointing to a usage bug rather
+than a model or data issue.
+
+After the fix, a 20-question batch spanned intimacy scores from -0.44
+to 0.50 (vs. -0.37 to 0.09 before the fix), with ordering matching
+independent human judgment: abstract/impersonal questions scored
+lowest, emotionally vulnerable/explicit content scored highest — in
+line with the paper's own reported range (-0.58 to 0.48).
+
 ## Why this is notable for this project
 This is the second time in this project that a rules-based approach was
 tried first, found to hit a real ceiling on ambiguous/context-dependent
