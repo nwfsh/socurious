@@ -28,6 +28,8 @@ def contains_my_pronoun(title: str) -> bool:
 
 # want better questions + not dumb and surface ones 
 def is_too_short(title: str, min_words: int = 4) -> bool:
+    if title is None:
+        return False
     return len(title.strip().split()) < min_words
 
 def targets_specific_group(title: str) -> bool:
@@ -50,27 +52,26 @@ def targets_specific_group(title: str) -> bool:
 
 ## cheap to expensive
 ## also by
-def should_reject(title: str) -> tuple[bool, str | None]:
-    if is_too_short(title):
-        return True, "too_short"
+def should_reject(title: str) -> tuple[bool, str, str| None]:
     title = extract_question(title)
+    if is_too_short(title):
+        return True, "too_short", ""
     if title is None:
-        return True, "not_a_question"
+        return True, "not_a_question", ""
     if contains_i_pronoun(title):
-        return True, "contains_i"
+        return True, "contains_i", ""
     if contains_me_pronoun(title):
-        return True, "contains_me"
-
+        return True, "contains_me", ""
     if contains_my_pronoun(title):
-        return True, "contains_my"
+        return True, "contains_my", ""
     if targets_specific_group(title):
-        return True, "contains_certain_group"
+        return True, "contains_certain_group", ""
         
     # if not is_english(title):
     #     return True, "not_english"
     # if contains_hate_speech(title):
     #     return True, "contain_hate_speech"
-    return False, None
+    return False, None, title 
 
 
     

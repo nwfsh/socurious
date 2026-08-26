@@ -1,7 +1,10 @@
 import os
 import psycopg
 from collections import Counter
+from dotenv import load_dotenv
 from src.transform.filters import should_reject
+
+load_dotenv()
 
 def load_clean_questions():
     with psycopg.connect(
@@ -19,7 +22,7 @@ def load_clean_questions():
         rejected_reasons = Counter()
 
         for raw_id, title in rows:
-            rejected, reason = should_reject(title)
+            rejected, reason, cleaned_question = should_reject(title)
             if rejected:
                 rejected_reasons[reason] += 1
                 conn.execute("UPDATE raw_questions SET rejection_reason = %s WHERE id = %s",
@@ -29,7 +32,7 @@ def load_clean_questions():
             result = conn.execute(
                 """INSERT INTO questions (raw_question_id, text, severity)
                    VALUES (%s, %s, %s) RETURNING id""",
-                (raw_id, title, 1)  # severity=1 placeholder until classification is added
+                (raw_id, cleaned_question, 1)  # severity=1 placeholder until classification is added
             )
             question_id = result.fetchone()[0]
 

@@ -61,3 +61,13 @@ r/NoStupidQuestions: fetched 0
 r/questions: fetched 0
 ((venv) ) averychong@Averys-MacBook-Pro socurious % 
 
+
+## added new row becus we are using question id to rule out 
+
+## things i decided on
+Lowercase i pronoun missed by \bI\b (case-sensitive regex)
+langdetect — ~87% false-positive rate on short titles, killed as a rule entirely
+contain_hate_speech via a broad profanity checker — ~83% false-positive rate, also killed
+contains_certain_group — found via testing that "people who [common thing]" and "people who [rare thing]" are structurally identical, so the rule can't tell niche from broad
+reject/null ambiguity for not reprocessing new questions, rejects and unprocessed rows looked identical in the schema, hence might make database to process them agnm
+so added rejected column 
