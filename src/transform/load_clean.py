@@ -3,6 +3,7 @@ import psycopg
 from collections import Counter
 from dotenv import load_dotenv
 from src.transform.filters import should_reject
+from sentence_transformers import SentenceTransformer, util
 
 load_dotenv()
 
