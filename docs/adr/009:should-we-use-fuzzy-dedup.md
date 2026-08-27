@@ -100,17 +100,76 @@ diagnostic has been run and reviewed.
   rather than an oversight, revisited if data volume/duplication
   patterns change materially (e.g. after adding a second source).
   
-  
-  [94.5945945945946] Why indian developers leaked gta 6?
-   <-> Why indian developers leaked the gta 6?
 
-[100.0] Whats a secret or opinion you purposefully keeping from your significant other, regardless if it’s a small or big thing?
-   <-> Whats a secret or opinion you purposefully keeping from your significant other, regardless if it’s a small or big thing?
+   Fuzzy matching (rapidfuzz) — real data (525 rows):
+Found: 4 pairs
+3 exact duplicates (100%)
+1 near-duplicate ("gta 6" vs "the gta 6", 94.6%)
+Missed: 2 genuine paraphrase duplicates (different wording, same meaning)
+Embeddings (sentence-transformers) — real data (525 rows):
+Found: 6 pairs
+Same 3 exact duplicates
+Same "gta 6" near-duplicate
+Plus 2 extra real duplicates fuzzy matching missed (Flock cameras, torture question — different wording, same intent)
+Zero false positives
+Adversarial test cases (hypothetical, not real data):
+Fuzzy matching: correctly rejected banana/orange (58.5%) ❌ falsely flagged movie/food as duplicate (86.8%)
+Embeddings: correctly rejected movie/food (0.469) ⚠️ banana/orange scored high (0.884) — risky, not yet seen in real data
+Bottom line: embeddings = same precision, better recall on real data. Fuzzy matching structurally misses paraphrases; embeddings catch them. Neither is perfect on adversarial edge cases, but embeddings performed better on your actual dataset.
 
-[100.0] What is your favourite genre of music?
-   <-> What is your favourite genre of music?
-
-[100.0] What's something from your childhood that would confuse kids today?
-   <-> What's something from your childhood that would confuse kids today?
-
-   
+## Decision (revised after empirical comparison)
+Ran both approaches against the real `questions` dataset (525 rows),
+plus adversarial test pairs targeting known failure modes.
+ 
+**Results:**
+- Fuzzy matching (rapidfuzz, ~90% threshold): found 4 real duplicates.
+  Missed 2 genuine paraphrase-duplicates with low word overlap (e.g.
+  "issue with Flock cameras" vs. "your take on flock cameras").
+- Embeddings (sentence-transformers, ~0.85 cosine threshold): found
+  all 4 of fuzzy's pairs, plus the 2 missed paraphrases — 6 total,
+  zero false positives on real data.
+- Adversarial pairs: fuzzy matching correctly rejected bananas/oranges
+  (58.5%) but falsely flagged movie/food as duplicate (86.8%).
+  Embeddings correctly rejected movie/food (0.469) but scored
+  bananas/oranges ambiguously high (0.884) — a known, unresolved edge
+  case for embeddings, not yet seen in real data.
+**Decision: use embedding similarity, not fuzzy matching, for dedup.**
+Same precision, higher recall on real data — reverses the original
+plan (`rapidfuzz`), based on direct comparison rather than assumption.
+ 
+## Reasoning for high threshold over embeddings, for now
+- A high fuzzy-match threshold is simple, fast (rapidfuzz is
+  implemented in C, near-instant at this project's current scale),
+  and empirically avoids the banana/orange failure mode without
+  needing a new model dependency.
+- Embeddings would catch more true paraphrase-duplicates, but add a
+  new model/dependency for a problem not yet confirmed to exist at
+  meaningful scale in this dataset, and would not fully solve the
+  tone/register distinction problem either — a genuinely open, harder
+  problem (e.g. "what's your biggest fear" reads as more reflective,
+  "what scares you most" reads as more casual, despite near-identical
+  denotative meaning) that may not be solvable by either lexical or
+  embedding similarity alone.
+- Consistent with this project's established pattern: test the
+  simpler approach against real data first; only reach for a heavier
+  tool (embeddings, or eventually an LLM-based semantic check) if the
+  simpler approach demonstrably fails on real examples.
+## Open question / next step
+Run a diagnostic script comparing all pairs in the current `questions`
+table at the 90% threshold, and manually review any matches found, to
+determine:
+1. Whether meaningful near-duplication actually exists in this dataset
+2. Whether the 90% threshold correctly avoids false-positive merges
+   like the banana/orange case, using real data rather than a single
+   hypothetical example
+This ADR should be updated to "Accepted" or revised once that
+diagnostic has been run and reviewed.
+ 
+## Consequences (anticipated, pending validation)
+- If duplication is confirmed present and the threshold behaves well:
+  proceed to wire fuzzy dedup into the load pipeline, likely scoped by
+  topic category to reduce comparison volume as data grows.
+- If duplication is negligible: skip dedup as a built pipeline stage
+  for now, documented as a deliberate decision based on evidence
+  rather than an oversight, revisited if data volume/duplication
+  patterns change materially (e.g. after adding a second source).

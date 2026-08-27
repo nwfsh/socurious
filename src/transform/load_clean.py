@@ -30,9 +30,9 @@ def load_clean_questions():
                 continue
 
             result = conn.execute(
-                """INSERT INTO questions (raw_question_id, text, severity)
-                   VALUES (%s, %s, %s) RETURNING id""",
-                (raw_id, cleaned_question, 1)  # severity=1 placeholder until classification is added
+                """INSERT INTO questions (raw_question_id, text)
+                   VALUES (%s, %s) RETURNING id""",
+                (raw_id, cleaned_question)
             )
             question_id = result.fetchone()[0]
 
