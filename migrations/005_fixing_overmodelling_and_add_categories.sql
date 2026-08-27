@@ -15,7 +15,7 @@ CREATE TABLE question_category (
 DROP TABLE question_tags;
 DROP TABLE relationship_context;
 
-CREATE INDEX idx_question_category ON question_category(category_id)
+CREATE INDEX idx_question_category ON question_category(category_id);
 
 INSERT INTO categories (name) VALUES
     ('relationships'),
