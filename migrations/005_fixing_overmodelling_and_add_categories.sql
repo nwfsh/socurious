@@ -34,3 +34,5 @@ ALTER TABLE questions ALTER COLUMN severity TYPE NUMERIC(4,3); -- means 4 total 
 ALTER TABLE questions RENAME COLUMN severity TO intimacy_score;
 ALTER TABLE questions ADD CONSTRAINT intimacy_score_range CHECK (intimacy_score >= -1 AND intimacy_score <= 1);
 
+
+ALTER TABLE questions DROP CONSTRAINT questions_severity_check;

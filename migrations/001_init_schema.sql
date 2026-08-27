@@ -12,6 +12,8 @@ CREATE TABLE sources (
 );
 
 -- categories being lists of topics - career, hypotheticals, values 
+-- primary key is id instead of name as its cheaper with integers
+-- when its a foreign key of another table 
 CREATE TABLE categories (
     id    SERIAL PRIMARY KEY,
     name  TEXT NOT NULL UNIQUE
