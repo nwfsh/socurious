@@ -219,3 +219,6 @@ __marimo__/
 
 # Model cache
 model_cache/
+
+# Database backups
+*.sql
