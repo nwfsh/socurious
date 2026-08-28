@@ -1,17 +1,17 @@
 name: Question Pipeline
 
 on:
-# run every 8am utc
+  # run every 8am utc
   schedule:
     - cron: '0 8 * * *'
-    # allows me to run this workflow whnever i wanna, instead of always waiting for the schedule 
+  # allows me to run this workflow whenever i wanna, instead of always waiting for the schedule
   workflow_dispatch:
 
 jobs:
   run-pipeline:
-  # give a fresh new linux virtual machine to run on 
+    # give a fresh new linux virtual machine to run on
     runs-on: ubuntu-latest
-    # will do everyhting step by step like this 
+    # will do everything step by step like this
     steps:
       - uses: actions/checkout@v4
 
@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      # get all your hugging face models ( well all 3 of them ) + cache it 
+      # get all your hugging face models ( well all 3 of them ) + cache it
       - name: Cache Hugging Face models
         uses: actions/cache@v4
         with:
@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # after setting up the enviroment, run all these files now !! 
+      # after setting up the environment, run all these files now !!
       - name: Run fetch
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
