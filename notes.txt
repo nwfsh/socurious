@@ -71,3 +71,11 @@ contain_hate_speech via a broad profanity checker — ~83% false-positive rate, 
 contains_certain_group — found via testing that "people who [common thing]" and "people who [rare thing]" are structurally identical, so the rule can't tell niche from broad
 reject/null ambiguity for not reprocessing new questions, rejects and unprocessed rows looked identical in the schema, hence might make database to process them agnm
 so added rejected column 
+
+WHAT I DID 
+"It's a layered pipeline — raw, clean, classified — each stage independently re-runnable and idempotent. Extraction pulls from Reddit via RSS through an adapter pattern, so swapping or adding sources doesn't touch downstream logic. That mattered in practice — Reddit closed self-serve API access mid-project, and the pivot only touched the adapter, nothing else.
+Transform is rules-based structural filtering — length, question-shape, pronoun signals, niche-audience detection — each rule validated against real data through manual error analysis before being trusted, with rejection reasons logged, not silently dropped.
+Classification is two-stage: zero-shot topic tagging via a DeBERTa model, and intimacy/severity scoring via a domain-specific model from published EMNLP research, chosen over hand-rolled rules once I confirmed rules genuinely couldn't distinguish 'common phrased-as-niche' from 'actually niche' — a real ceiling on lexical matching, not a guess.
+Deduplication is sentence-embedding similarity, not fuzzy string matching — I ran both against real data and adversarial test cases, embeddings caught paraphrase-duplicates fuzzy matching structurally couldn't see, same false-positive rate.
+Schema-wise, one real architectural decision worth mentioning: I originally modeled topic, intimacy, and audience-appropriateness as a three-way relationship, caught it was a spurious ternary — audience-appropriateness is actually a function of the other two, not independent — and moved it to be computed at query time instead of stored, which also unlocks features like a closeness slider without any data migration.
+It's hosted on Postgres via Neon, with GitHub Actions running the full pipeline on a schedule, model caching to keep CI runs efficient."
