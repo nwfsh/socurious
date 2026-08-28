@@ -37,6 +37,10 @@ def targets_specific_group(title: str) -> bool:
     patterns = ["people who", "for those with", "to the people of", "to those who", " as a ", "what are your stories"]
     return any(p in t for p in patterns)
 
+def targets_reddit_audience(title: str) -> bool:
+    t = title.lower()
+    return bool(re.search(r'\bof reddit\b', t))
+
 # remove cus less than 0.3% of data, and cannot filter accurately 
 # def is_english(title: str) -> bool:
 #     if len(title.split()) < 4:
@@ -66,6 +70,8 @@ def should_reject(title: str) -> tuple[bool, str, str| None]:
         return True, "contains_my", ""
     if targets_specific_group(title):
         return True, "contains_certain_group", ""
+    if targets_reddit_audience(title):
+        return True, "contains_reddit_audience"
         
     # if not is_english(title):
     #     return True, "not_english"
