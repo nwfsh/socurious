@@ -71,7 +71,7 @@ def should_reject(title: str) -> tuple[bool, str, str| None]:
     if targets_specific_group(title):
         return True, "contains_certain_group", ""
     if targets_reddit_audience(title):
-        return True, "contains_reddit_audience"
+        return True, "contains_reddit_audience", ""
         
     # if not is_english(title):
     #     return True, "not_english"
