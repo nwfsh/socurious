@@ -15,10 +15,7 @@ SIMILARITY_THRESHOLD = 0.90
 
 def load_clean_questions():
     with psycopg.connect(
-        dbname=os.getenv("DB_NAME"),
-        user=os.getenv("DB_USER"),
-        host=os.getenv("DB_HOST"),
-        port=os.getenv("DB_PORT"),
+        os.getenv("DATABASE_URL")
     ) as conn:
         rows = conn.execute(
             "SELECT id, raw_title FROM raw_questions WHERE question_id IS NULL AND rejection_reason is NULL"

@@ -14,10 +14,7 @@ load_dotenv()
 
 # connect to the database 
 conn = psycopg.connect(
-    dbname=os.getenv("DB_NAME"),
-    user=os.getenv("DB_USER"),
-    host=os.getenv("DB_HOST"),
-    port=os.getenv("DB_PORT"),
+    os.getenv("DATABASE_URL")
 )
 
 # grab sources from database 
