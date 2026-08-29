@@ -2,22 +2,41 @@ from src.transform.classify import get_conn
 
 ## only file that touches the database and queries it
 
-def fetch_random_question(topic: str | None = None):
+def fetch_random_question(
+        topic: str | None = None,
+        min_intimacy: float | None = None,
+        max_intimacy: float | None = None,
+        ):
     conn = get_conn()
 
-    ## for python psycopg, u need to write """ when u wanna do multiple sql lines
+    conditions = []
+    params = []
+
     if topic:
-        row = conn.execute("""
+        conditions.append("c.name = %s")
+        params.append(topic)
+
+    if min_intimacy is not None:
+        conditions.append("q.intimacy_score >= %s")
+        params.append(min_intimacy)
+
+    if max_intimacy is not None:
+        conditions.append("q.intimacy_score <= %s")
+        params.append(max_intimacy)
+
+    where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
+
+    if topic or min_intimacy is not None or max_intimacy is not None:
+        row = conn.execute(f"""
             SELECT q.id, q.text, q.intimacy_score
             FROM questions q
             JOIN question_category qc ON q.id = qc.question_id
             JOIN categories c ON qc.category_id = c.id
-            WHERE c.name = %s
+            {where_clause}
             ORDER BY random()
             LIMIT 1
-        """, (topic,)).fetchone() # fill in the %s with topic
+        """, params).fetchone()
     else:
-        ## or just grab any random question 
         row = conn.execute("""
             SELECT id, text, intimacy_score
             FROM questions
@@ -25,22 +44,43 @@ def fetch_random_question(topic: str | None = None):
             LIMIT 1
         """).fetchone()
 
-    return row
+    conn.close()
+    return {"id": row[0], "text": row[1], "intimacy_score": float(row[2])} if row else None
 
-# question_repo.py
-def fetch_random_questions(topic: str | None = None, limit: int = 12):
+def fetch_random_questions(
+        topic: str | None = None,
+        min_intimacy: float | None = None,
+        max_intimacy: float | None = None,
+        limit: int = 12):
     conn = get_conn()
 
+    conditions = []
+    params = []
+
     if topic:
-        rows = conn.execute("""
+        conditions.append("c.name = %s")
+        params.append(topic)
+
+    if min_intimacy is not None:
+        conditions.append("q.intimacy_score >= %s")
+        params.append(min_intimacy)
+
+    if max_intimacy is not None:
+        conditions.append("q.intimacy_score <= %s")
+        params.append(max_intimacy)
+
+    where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
+    
+    if topic or min_intimacy is not None or max_intimacy is not None:
+        rows = conn.execute(f"""
             SELECT q.id, q.text, q.intimacy_score
             FROM questions q
             JOIN question_category qc ON q.id = qc.question_id
             JOIN categories c ON qc.category_id = c.id
-            WHERE c.name = %s
+            {where_clause}
             ORDER BY random()
-            LIMIT %s 
-        """, (topic, limit)).fetchall()  # fill in the %s and %s string with topic & limit 
+            LIMIT %s
+        """, params + [limit]).fetchall()
     else:
         rows = conn.execute("""
             SELECT id, text, intimacy_score
