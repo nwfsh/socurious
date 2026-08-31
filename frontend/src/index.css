@@ -3,7 +3,19 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 
+/*  my global styles ( tailwind + shadcn )  */
 @custom-variant dark (&:is(.dark *));
+
+canvas#dither {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.04;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  z-index: 0;
+}
 
 *, *::before, *::after {
   box-sizing: border-box;

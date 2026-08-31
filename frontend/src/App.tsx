@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import './App.css'
+
 
 function drawDither() {
   const canvas = document.getElementById('dither') as HTMLCanvasElement
