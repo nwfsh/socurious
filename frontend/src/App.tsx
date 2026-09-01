@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { RotateCw } from 'lucide-react'
 import { QuestionCard } from './components/QuestionCard'
-import { Slider } from "@/components/ui/slider"
+import DecryptedText from './components/DecryptedText'
+import Nav from './components/Nav'
 
 type Question = {
     id: number;
@@ -11,7 +11,7 @@ type Question = {
 
 async function fetchQuestions(min: number, max: number): Promise<Question[]> {
     const params = new URLSearchParams({
-        limit: '9',
+        limit: '16',
         min_intimacy: (min / 100).toFixed(2),
         max_intimacy: (max / 100).toFixed(2),
     })
@@ -63,30 +63,55 @@ useEffect(() => {
 }, [])
 
 return (
-  <div className="min-h-screen flex flex-col items-center justify-center gap-6 p-8">
-    <div className="w-full max-w-5xl flex items-center gap-4">
-      <span className="text-sm text-muted-foreground w-24">intimacy {(intimacy[0]/100).toFixed(1)}–{(intimacy[1]/100).toFixed(1)}</span>
-      <Slider
-        min={-100}
-        max={100}
-        step={1}
-        value={intimacy}
-        onValueChange={(v) => setIntimacy(v as [number, number])}
-        onValueCommitted={(v) => loadQuestions((v as number[])[0], (v as number[])[1])}
-        className="flex-1"
-      />
-      <button onClick={() => loadQuestions()} disabled={loading} className="p-2 rounded-full hover:bg-muted transition-colors disabled:opacity-50">
-        <RotateCw size={18} />
-      </button>
-    </div>
-    {loading && <p className="text-muted-foreground text-sm">loading...</p>}
-    {!loading && questions.length > 0 && (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-5xl">
-        {questions.map(q => <QuestionCard key={q.id} question={q} />)}
-      </div>
-    )}
-  </div>
-)
+    <>
+        {/* Fixed header: title overlaps nav from above */}
+        <div className="fixed top-16 inset-x-0 z-50 flex flex-col items-center pointer-events-none">
+            <h1
+                className="text-8xl tracking-tight relative z-10 pointer-events-auto"
+                style={{
+                    color: "#53131E",
+                    marginBottom: "1.75rem",
+                    fontFamily: "'Kranky', cursive",
+                    marginTop: "1.00rem",
+                }}
+            >
+                <DecryptedText
+                    text="SoCurious"
+                    animateOn="hover"
+                    sequential
+                    revealDirection="center"
+                    speed={100}
+                />
+            </h1>
+            <Nav
+                intimacy={intimacy}
+                loading={loading}
+                onIntimacyChange={(v) => setIntimacy(v)}
+                onIntimacyCommit={(v) => loadQuestions(v[0], v[1])}
+                onRefresh={() => loadQuestions()}
+            />
+        </div>
+
+        <div className="min-h-screen flex flex-col items-center justify-center gap-6 p-8 pt-80">
+            {loading && (
+                <p className="text-muted-foreground text-sm">loading...</p>
+            )}
+            {!loading && questions.length > 0 && (
+                <div
+                    className="grid gap-4 w-full max-w-6xl"
+                    style={{
+                        gridTemplateColumns:
+                            "repeat(auto-fill, minmax(220px, 1fr))",
+                    }}
+                >
+                    {questions.map((q) => (
+                        <QuestionCard key={q.id} question={q} />
+                    ))}
+                </div>
+            )}
+        </div>
+    </>
+);
 
 }
 

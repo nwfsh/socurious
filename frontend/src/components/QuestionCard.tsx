@@ -24,7 +24,7 @@ export function QuestionCard({ question }: { question: Question }) {
         />
       </svg>
       <div className="relative p-8">
-        <p className="text-xl font-medium leading-relaxed">{question.text}</p>
+        <p className="text-base font-medium leading-relaxed">{question.text}</p>
         <p className="mt-4 text-sm text-muted-foreground">
           intimacy {Math.round(question.intimacy_score * 100)}
         </p>
