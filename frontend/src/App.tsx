@@ -64,16 +64,10 @@ useEffect(() => {
 
 return (
     <>
-        {/* Fixed header: title overlaps nav from above */}
-        <div className="fixed top-16 inset-x-0 z-50 flex flex-col items-center pointer-events-none">
+        <div className="min-h-screen flex flex-col items-center gap-6 p-8 pt-16">
             <h1
-                className="text-8xl tracking-tight relative z-10 pointer-events-auto"
-                style={{
-                    color: "#53131E",
-                    marginBottom: "1.75rem",
-                    fontFamily: "'Kranky', cursive",
-                    marginTop: "1.00rem",
-                }}
+                className="text-8xl tracking-tight pointer-events-auto"
+                style={{ color: "#53131E", fontFamily: "'Kranky', cursive" }}
             >
                 <DecryptedText
                     text="SoCurious"
@@ -83,22 +77,21 @@ return (
                     speed={100}
                 />
             </h1>
-            <Nav
-                intimacy={intimacy}
-                loading={loading}
-                onIntimacyChange={(v) => setIntimacy(v)}
-                onIntimacyCommit={(v) => loadQuestions(v[0], v[1])}
-                onRefresh={() => loadQuestions()}
-            />
-        </div>
-
-        <div className="min-h-screen flex flex-col items-center justify-center gap-6 p-8 pt-80">
+            <div className="sticky top-4 z-50 flex justify-center">
+                <Nav
+                    intimacy={intimacy}
+                    loading={loading}
+                    onIntimacyChange={(v) => setIntimacy(v)}
+                    onIntimacyCommit={(v) => loadQuestions(v[0], v[1])}
+                    onRefresh={() => loadQuestions()}
+                />
+            </div>
             {loading && (
                 <p className="text-muted-foreground text-sm">loading...</p>
             )}
             {!loading && questions.length > 0 && (
                 <div
-                    className="grid gap-4 w-full max-w-6xl"
+                    className="grid gap-4 w-full max-w-6xl mt-12"
                     style={{
                         gridTemplateColumns:
                             "repeat(auto-fill, minmax(220px, 1fr))",
