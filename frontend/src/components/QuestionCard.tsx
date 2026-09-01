@@ -6,7 +6,7 @@ type Question = {
 
 export function QuestionCard({ question }: { question: Question }) {
   return (
-    <div className="relative group max-w-lg w-full bg-card text-card-foreground rounded-xl border shadow-sm">
+    <div className="relative group w-full bg-card text-card-foreground rounded-xl border ">
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl overflow-visible"
       >
