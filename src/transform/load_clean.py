@@ -4,6 +4,7 @@ import numpy as np
 from collections import Counter
 from dotenv import load_dotenv
 from src.transform.filters import should_reject
+from src.transform.classify import classify_intimacy
 from sentence_transformers import SentenceTransformer, util
 
 load_dotenv()
@@ -12,6 +13,7 @@ load_dotenv()
 _model = SentenceTransformer('all-MiniLM-L6-v2')
 SIMILARITY_THRESHOLD = 0.90
 
+INTIMACY_FLOOR = -0.25
 
 def load_clean_questions():
     with psycopg.connect(
@@ -38,6 +40,13 @@ def load_clean_questions():
                 (reason, raw_id))
                 continue
 
+            intimacy = classify_intimacy(cleaned_question)
+            if intimacy < INTIMACY_FLOOR:
+                rejected_reasons["too_impersonal"] += 1
+                conn.execute("UPDATE raw_questions SET rejection_reason = %s WHERE id = %s",
+                             ("too_impersonal", raw_id))
+                continue
+
             ## converts incoming question into its embedded vector 
             candidate_embedding = _model.encode(cleaned_question)
             if len(existing_embeddings) > 0:
@@ -54,9 +63,9 @@ def load_clean_questions():
 
             ## if not similiar, now u can insert !
             result = conn.execute(
-                """INSERT INTO questions (raw_question_id, text)
-                   VALUES (%s, %s) RETURNING id""",
-                (raw_id, cleaned_question)
+                """INSERT INTO questions (raw_question_id, text, intimacy_score)
+                   VALUES (%s, %s, %s) RETURNING id""",
+                (raw_id, cleaned_question, intimacy)
             )
             question_id = result.fetchone()[0]
 

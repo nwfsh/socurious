@@ -63,13 +63,6 @@ def classify_and_store(conn, threshold: float = 0.4):
                     (question_id, category_id)
                 )
 
-        # --- Intimacy scoring ---
-        intimacy = classify_intimacy(text)
-        conn.execute(
-            "UPDATE questions SET intimacy_score = %s WHERE id = %s",
-            (intimacy, question_id)
-        )
-
     conn.commit()
     print(f"Classified {len(rows)} questions")
 
