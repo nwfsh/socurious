@@ -3,12 +3,10 @@ from src.transform.classify import get_conn
 def reset_all():
     conn = get_conn()
 
-    # Clear dependent/downstream data first (FK order matters)
+    # Null out FK first so questions can be deleted
+    conn.execute("UPDATE raw_questions SET question_id = NULL, rejection_reason = NULL")
     conn.execute("DELETE FROM question_category")
     conn.execute("DELETE FROM questions")
-
-    # Reset raw_questions so load_clean reprocesses everything from scratch
-    conn.execute("UPDATE raw_questions SET question_id = NULL, rejection_reason = NULL")
 
     conn.commit()
     conn.close()
