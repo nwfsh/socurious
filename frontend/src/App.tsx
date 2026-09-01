@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
+import { RotateCw } from 'lucide-react'
 import { QuestionCard } from './components/QuestionCard'
-import { Button } from '@base-ui/react'
 
 type Question = {
     id: number;
@@ -60,9 +60,9 @@ return (
   <div className="min-h-screen flex flex-col items-center justify-center gap-6 p-8">
     {loading && <p className="text-muted-foreground text-sm">loading...</p>}
     {question && !loading && <QuestionCard question={question} />}
-    <Button onClick={loadQuestion} disabled={loading}>
-      next question
-    </Button>
+    <button onClick={loadQuestion} disabled={loading} className="p-2 rounded-full hover:bg-muted transition-colors disabled:opacity-50">
+      <RotateCw size={18} />
+    </button>
   </div>
 )
 
