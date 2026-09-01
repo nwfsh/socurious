@@ -8,8 +8,5 @@ def get_random_question(topic: str | None = None, min_intimacy: float | None = N
     return result
 
 def get_random_questions(topic: str | None = None, min_intimacy: float | None = None, max_intimacy: float | None = None, limit: int = 12):
-    questions = fetch_random_questions(topic=topic, min_intimacy=min_intimacy, max_intimacy=max_intimacy, limit=limit)
-    if not questions:
-        raise HTTPException(status_code=404, detail="No questions found matching the given filters")
-    return questions
+    return fetch_random_questions(topic=topic, min_intimacy=min_intimacy, max_intimacy=max_intimacy, limit=limit)
 ## adde
