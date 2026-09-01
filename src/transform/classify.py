@@ -53,7 +53,7 @@ def get_conn():
 
 def classify_and_store(conn, threshold: float = 0.4):
     rows = conn.execute(
-        "SELECT id, text FROM questions WHERE id NOT IN (SELECT question_id FROM question_category)"
+        "SELECT id, text FROM questions WHERE classified_at IS NULL"
     ).fetchall()
 
     for question_id, text in rows:
@@ -72,6 +72,11 @@ def classify_and_store(conn, threshold: float = 0.4):
                        VALUES (%s, %s) ON CONFLICT DO NOTHING""",
                     (question_id, category_id)
                 )
+
+        conn.execute(
+            "UPDATE questions SET classified_at = NOW() WHERE id = %s",
+            (question_id,)
+        )
 
     conn.commit()
     print(f"Classified {len(rows)} questions")
