@@ -6,12 +6,22 @@ import psycopg
 
 load_dotenv()
 
-## to decide on topic, zero shot classification 
 os.environ["HF_TOKEN"] = os.getenv("HF_TOKEN")
-topic_classifier = pipeline("zero-shot-classification", model="MoritzLaurer/deberta-v3-large-zeroshot-v2.0")
 
-## intamacy score model ( researched backed YAY win for avery)
-intimacy_scorer = IntimacyEstimator(cuda=False)
+_topic_classifier = None
+_intimacy_scorer = None
+
+def _get_topic_classifier():
+    global _topic_classifier
+    if _topic_classifier is None:
+        _topic_classifier = pipeline("zero-shot-classification", model="MoritzLaurer/deberta-v3-large-zeroshot-v2.0")
+    return _topic_classifier
+
+def _get_intimacy_scorer():
+    global _intimacy_scorer
+    if _intimacy_scorer is None:
+        _intimacy_scorer = IntimacyEstimator(cuda=False)
+    return _intimacy_scorer
 
 ## very simple maybe not the best for now
 categories = [
@@ -28,12 +38,12 @@ categories = [
 
 # helper function 
 def classify_topic(title: str) -> tuple[str,float]:
-    result = topic_classifier(title, categories)
+    result = _get_topic_classifier()(title, categories)
     return result["labels"][0], result["scores"][0]
 
 # helper function 
 def classify_intimacy(title: str) -> float:
-    result = intimacy_scorer.predict([title], type='list')
+    result = _get_intimacy_scorer().predict([title], type='list')
     return float(result[0])
 
 def get_conn():
@@ -43,7 +53,7 @@ def get_conn():
 
 def classify_and_store(conn, threshold: float = 0.4):
     rows = conn.execute(
-        "SELECT id, text FROM questions WHERE intimacy_score IS NULL"
+        "SELECT id, text FROM questions WHERE id NOT IN (SELECT question_id FROM question_category)"
     ).fetchall()
 
     for question_id, text in rows:
