@@ -14,7 +14,7 @@ canvas#dither {
   opacity: 0.04;
   pointer-events: none;
   mix-blend-mode: multiply;
-  z-index: 0;
+  z-index: -1;
 }
 
 *, *::before, *::after {

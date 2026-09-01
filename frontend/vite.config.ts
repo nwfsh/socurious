@@ -5,10 +5,15 @@ import path from 'path'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
-  resolve: {
-    alias: {
-      '@': path.resolve(import.meta.dirname, './src'),
+    plugins: [react(), tailwindcss()],
+    resolve: {
+        alias: {
+            "@": path.resolve(import.meta.dirname, "./src"),
+        },
     },
-  },
-})
+    server: {
+        proxy: {
+            "/questions": "http://localhost:8000",
+        },
+    },
+});
