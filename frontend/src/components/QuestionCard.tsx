@@ -24,8 +24,8 @@ export function QuestionCard({ question }: { question: Question }) {
                   style={{ animation: "marchingDots 2s linear infinite" }}
               />
           </svg>
-          <div className="relative p-8">
-              <p className="text-base font-medium leading-relaxed">
+          <div className="relative p-6">
+              <p className="text-sm font-medium leading-relaxed">
                   {question.text}
               </p>
           </div>

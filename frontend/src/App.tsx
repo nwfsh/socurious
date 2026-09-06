@@ -3,6 +3,7 @@ import { QuestionCard } from './components/QuestionCard'
 import DecryptedText from './components/DecryptedText'
 import Dock from './components/Dock'
 import Stack from './components/Stack'
+import { ModeSelectModal } from './components/ModeSelectModal'
 import { Slider } from './components/ui/slider'
 import { RefreshCw, Layers, Gamepad2, Check } from 'lucide-react'
 
@@ -44,6 +45,7 @@ function App() {
 const [questions, setQuestions] = useState<Question[]>([])
 const [loading, setLoading] = useState(false)
 const [rateLimited, setRateLimited] = useState(false)
+const [showModeSelect, setShowModeSelect] = useState(true)
 const [gameMode, setGameMode] = useState(false)
 const [intimacy, setIntimacy] = useState<[number, number]>([-25, 60])
 const [isMobile, setIsMobile] = useState(() => window.innerWidth < 640)
@@ -95,6 +97,14 @@ useEffect(() => {
 
 return (
     <>
+        {showModeSelect && (
+            <ModeSelectModal
+                onSelect={(mode) => {
+                    setGameMode(mode === 'game')
+                    setShowModeSelect(false)
+                }}
+            />
+        )}
         {rateLimited && (
             <div className="fixed inset-0 flex items-center justify-center z-[100] pointer-events-none">
                 <div className="pointer-events-auto bg-zinc-900 border border-white/10 rounded-none px-6 py-4 flex items-center gap-4 shadow-xl">
@@ -267,7 +277,7 @@ return (
                     className="grid gap-4 w-full max-w-6xl mt-2"
                     style={{
                         gridTemplateColumns:
-                            "repeat(auto-fill, minmax(220px, 1fr))",
+                            "repeat(auto-fill, minmax(190px, 1fr))",
                     }}
                 >
                     {questions.map((q) => (
@@ -278,7 +288,7 @@ return (
             {!loading && questions.length > 0 && gameMode && (
                 <div className="flex flex-col items-center gap-3 -mt-2">
                     <p className="text-xs text-zinc-500">{isMobile ? 'tap or swipe to go through' : 'click or drag to go through'}</p>
-                    <div style={{ width: isMobile ? Math.min(window.innerWidth - 48, 300) : 320, height: isMobile ? 380 : 420, position: 'relative' }}>
+                    <div style={{ width: isMobile ? Math.min(window.innerWidth - 48, 270) : 290, height: isMobile ? 340 : 380, position: 'relative' }}>
                         <Stack
                             randomRotation
                             sendToBackOnClick
