@@ -64,10 +64,25 @@ useEffect(() => {
 
 return (
     <>
+        <svg style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
+            <defs>
+                <filter id="grain">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" result="noise"/>
+                    <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
+                    <feComponentTransfer in="grayNoise" result="subtleNoise">
+                        <feFuncR type="linear" slope="0.2" intercept="0.4"/>
+                        <feFuncG type="linear" slope="0.2" intercept="0.4"/>
+                        <feFuncB type="linear" slope="0.2" intercept="0.4"/>
+                    </feComponentTransfer>
+                    <feBlend in="SourceGraphic" in2="subtleNoise" mode="overlay" result="blended"/>
+                    <feComposite in="blended" in2="SourceGraphic" operator="in"/>
+                </filter>
+            </defs>
+        </svg>
         <div className="min-h-screen flex flex-col items-center gap-6 p-8 pt-16">
             <h1
                 className="text-8xl tracking-tight pointer-events-auto"
-                style={{ color: "#53131E", fontFamily: "'Kranky', cursive" }}
+                style={{ color: "#53131E", fontFamily: "'Barrio', cursive", filter: "url(#grain)" }}
             >
                 <DecryptedText
                     text="SoCurious"
