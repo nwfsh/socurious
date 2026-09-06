@@ -4,7 +4,7 @@ import DecryptedText from './components/DecryptedText'
 import Dock from './components/Dock'
 import Stack from './components/Stack'
 import { Slider } from './components/ui/slider'
-import { RefreshCw, Layers, Gamepad2, Check, X } from 'lucide-react'
+import { RefreshCw, Layers, Gamepad2, Check } from 'lucide-react'
 
 const CATEGORIES = [
   'relationships', 'family and childhood', 'career',
@@ -253,7 +253,7 @@ return (
             {loading && (
                 <p className="text-muted-foreground text-sm">loading...</p>
             )}
-            {!loading && questions.length > 0 && (
+            {!loading && questions.length > 0 && !gameMode && (
                 <div
                     className="grid gap-4 w-full max-w-6xl mt-2"
                     style={{
@@ -266,36 +266,30 @@ return (
                     ))}
                 </div>
             )}
-        </div>
-        {gameMode && (
-            <div className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center gap-6">
-                <button
-                    onClick={() => setGameMode(false)}
-                    className="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors"
-                >
-                    <X size={20} />
-                </button>
-                <p className="text-xs text-zinc-500">click or drag to go through</p>
-                <div style={{ width: 320, height: 420, position: 'relative' }}>
-                    <Stack
-                        randomRotation
-                        sendToBackOnClick
-                        sensitivity={150}
-                        cards={questions.map(q => (
-                            <div
-                                key={q.id}
-                                className="w-full h-full rounded-xl border border-zinc-700 flex items-center justify-center p-8 select-none"
-                                style={{ backgroundColor: '#FDFDFD' }}
-                            >
-                                <p className="text-base font-medium leading-relaxed text-center text-zinc-800">
-                                    {q.text}
-                                </p>
+            {!loading && questions.length > 0 && gameMode && (
+                <div className="flex flex-col items-center gap-3 mt-8">
+                    <p className="text-xs text-zinc-500">click or drag to go through</p>
+                    <div style={{ width: 320, height: 420, position: 'relative' }}>
+                        <Stack
+                            randomRotation
+                            sendToBackOnClick
+                            sensitivity={150}
+                            cards={questions.map(q => (
+                                <div
+                                    key={q.id}
+                                    className="w-full h-full rounded-xl border border-zinc-200 flex items-center justify-center p-8 select-none"
+                                    style={{ backgroundColor: '#FDFDFD' }}
+                                >
+                                    <p className="text-base font-medium leading-relaxed text-center text-zinc-800">
+                                        {q.text}
+                                    </p>
                             </div>
                         ))}
                     />
                 </div>
             </div>
         )}
+        </div>
         <footer className="fixed bottom-0 left-0 w-full text-center text-xs text-zinc-500 pb-3 pointer-events-none">
             questions sourced from{" "}
             <a
