@@ -26,6 +26,9 @@ def contains_me_pronoun(title: str) -> bool:
 def contains_my_pronoun(title: str) -> bool:
     return bool(re.search(r'\bmy\b', title, re.IGNORECASE))
 
+def contains_im_pronoun(title: str) -> bool:
+    return bool(re.search(r'\bim\b', title, re.IGNORECASE))
+
 # want better questions + not dumb and surface ones 
 def is_too_short(title: str, min_words: int = 4) -> bool:
     if title is None:
@@ -40,6 +43,10 @@ def targets_specific_group(title: str) -> bool:
 def targets_reddit_audience(title: str) -> bool:
     t = title.lower()
     return bool(re.search(r'\bof reddit\b', t))
+
+def is_ama_format(title: str) -> bool:
+    """Reddit AMA posts: 'ama' as a standalone word, often with age/gender flair."""
+    return bool(re.search(r'\bama\b', title.lower()))
 
 # remove cus less than 0.3% of data, and cannot filter accurately 
 # def is_english(title: str) -> bool:
@@ -56,22 +63,26 @@ def targets_reddit_audience(title: str) -> bool:
 
 ## cheap to expensive
 ## also by
-def should_reject(title: str) -> tuple[bool, str, str| None]:
+def should_reject(title: str) -> tuple[bool, str | None, str | None]:
     title = extract_question(title)
     if is_too_short(title):
-        return True, "too_short", ""
+        return True, "too_short", None
     if title is None:
-        return True, "not_a_question", ""
+        return True, "not_a_question", None
     if contains_i_pronoun(title):
-        return True, "contains_i", ""
+        return True, "contains_i", None
     if contains_me_pronoun(title):
-        return True, "contains_me", ""
+        return True, "contains_me", None
     if contains_my_pronoun(title):
-        return True, "contains_my", ""
+        return True, "contains_my", None
+    if contains_im_pronoun(title):
+        return True, "contains_im", None
     if targets_specific_group(title):
-        return True, "contains_certain_group", ""
+        return True, "contains_certain_group", None
     if targets_reddit_audience(title):
-        return True, "contains_reddit_audience", ""
+        return True, "contains_reddit_audience", None
+    if is_ama_format(title):
+        return True, "is_ask_me_anything", None
         
     # if not is_english(title):
     #     return True, "not_english"
