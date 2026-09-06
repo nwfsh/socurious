@@ -1,14 +1,13 @@
 type Question = {
   id: number
   text: string
-  intimacy_score: number
 }
 
 export function QuestionCard({ question }: { question: Question }) {
   return (
-    <div className="relative group w-full bg-card text-card-foreground rounded-xl border ">
+    <div className="relative group w-full bg-card text-card-foreground rounded-md border ">
       <svg
-        className="absolute inset-0 w-full h-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl overflow-visible"
+        className="absolute inset-0 w-full h-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md overflow-visible"
       >
         <rect
           x="1" y="1"
@@ -16,7 +15,7 @@ export function QuestionCard({ question }: { question: Question }) {
           height="calc(100% - 2px)"
           rx="11"
           fill="none"
-          stroke="black"
+          stroke="#53131E"
           strokeWidth="2"
           strokeLinecap="round"
           strokeDasharray="5 5"
@@ -25,9 +24,6 @@ export function QuestionCard({ question }: { question: Question }) {
       </svg>
       <div className="relative p-8">
         <p className="text-base font-medium leading-relaxed">{question.text}</p>
-        <p className="mt-4 text-sm text-muted-foreground">
-          intimacy {Math.round(question.intimacy_score * 100)}
-        </p>
       </div>
     </div>
   )
