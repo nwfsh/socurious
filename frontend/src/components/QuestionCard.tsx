@@ -15,10 +15,10 @@ export function QuestionCard({ question }: { question: Question }) {
                   y="1"
                   width="calc(100% - 2px)"
                   height="calc(100% - 2px)"
-                  rx="8"
+                  rx="7"
                   fill="none"
                   stroke="#53131E"
-                  strokeWidth="2"
+                  strokeWidth="1"
                   strokeLinecap="square"
                   strokeDasharray="5 5"
                   style={{ animation: "marchingDots 2s linear infinite" }}

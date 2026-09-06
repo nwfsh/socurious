@@ -42,7 +42,7 @@ function DockItem({ item, baseItemSize, magnification, mouseX }: {
         ref={ref}
         style={{ width: size, height: size }}
         onClick={item.onClick}
-        className="flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 text-zinc-300 hover:text-white transition-colors"
+        className="flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-zinc-300 hover:text-white transition-colors"
       >
         {item.icon}
       </motion.button>
