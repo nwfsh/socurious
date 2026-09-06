@@ -46,6 +46,7 @@ const [loading, setLoading] = useState(false)
 const [rateLimited, setRateLimited] = useState(false)
 const [gameMode, setGameMode] = useState(false)
 const [intimacy, setIntimacy] = useState<[number, number]>([-25, 60])
+const [isMobile, setIsMobile] = useState(() => window.innerWidth < 640)
 const [catOpen, setCatOpen] = useState(false)
 const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set())
 
@@ -80,8 +81,12 @@ async function loadQuestions(min = intimacy[0], max = intimacy[1], cats = select
 
 useEffect(() => {
   drawDither()
-  window.addEventListener('resize', drawDither)
-  return () => window.removeEventListener('resize', drawDither)
+  const handleResize = () => {
+    drawDither()
+    setIsMobile(window.innerWidth < 640)
+  }
+  window.addEventListener('resize', handleResize)
+  return () => window.removeEventListener('resize', handleResize)
 }, [])
 
 useEffect(() => {
@@ -148,15 +153,18 @@ return (
             </defs>
         </svg>
         {catOpen && (
-            <div className="fixed bottom-36 left-1/2 -translate-x-1/2 z-50 bg-zinc-900/95 backdrop-blur-md border border-white/10 rounded-lg p-3 shadow-xl grid grid-cols-3 gap-1.5 w-max">
+            <div className="fixed bottom-36 left-1/2 -translate-x-1/2 z-50 bg-zinc-900/95 backdrop-blur-md border border-white/10 rounded-lg p-2 sm:p-3 shadow-xl grid grid-cols-2 sm:grid-cols-3 gap-1 sm:gap-1.5 w-max max-w-[calc(100vw-32px)]">
                 {CATEGORIES.map((cat) => (
                     <button
                         key={cat}
                         onClick={() => toggleCat(cat)}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm capitalize transition-colors text-left ${selectedCats.has(cat) ? "bg-[#53131E] text-white" : "text-zinc-300 hover:bg-white/10"}`}
+                        className={`flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-xs sm:text-sm capitalize transition-colors text-left ${selectedCats.has(cat) ? "bg-[#53131E] text-white" : "text-zinc-300 hover:bg-white/10"}`}
                     >
                         {selectedCats.has(cat) && (
-                            <Check size={12} strokeWidth={3} />
+                            <Check size={10} strokeWidth={3} className="sm:hidden" />
+                        )}
+                        {selectedCats.has(cat) && (
+                            <Check size={12} strokeWidth={3} className="hidden sm:block" />
                         )}
                         {cat}
                     </button>
@@ -186,15 +194,15 @@ return (
                     onClick: () => setGameMode(o => !o),
                 },
             ]}
-            panelHeight={80}
-            baseItemSize={52}
-            magnification={72}
+            panelHeight={isMobile ? 60 : 80}
+            baseItemSize={isMobile ? 40 : 52}
+            magnification={isMobile ? 52 : 72}
         >
-            <div className="flex flex-col items-center gap-1.5 px-2">
+            <div className="flex flex-col items-center gap-1 sm:gap-1.5 px-1 sm:px-2">
                 <span className="text-xs text-zinc-400">intimacy</span>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2">
                     <span className="text-xs text-zinc-500">low</span>
-                    <div className="w-36">
+                    <div className="w-24 sm:w-36">
                         <Slider
                             min={-25}
                             max={60}
@@ -215,9 +223,10 @@ return (
                 </div>
             </div>
         </Dock>
+
         <div className="min-h-screen flex flex-col items-center gap-6 p-8 pt-16 pb-32">
             <h1
-                className="text-9xl tracking-tight pointer-events-auto"
+                className="text-5xl sm:text-9xl tracking-tight pointer-events-auto"
                 style={{ color: "#53131E", filter: "url(#grain)" }}
             >
                 <span style={{ fontFamily: "'Fraunces', serif" }}>
@@ -268,24 +277,20 @@ return (
             )}
             {!loading && questions.length > 0 && gameMode && (
                 <div className="flex flex-col items-center gap-3 -mt-2">
-                    <p className="text-xs text-zinc-500">click or drag to go through</p>
-                    <div style={{ width: 320, height: 420, position: 'relative' }}>
+                    <p className="text-xs text-zinc-500">{isMobile ? 'tap or swipe to go through' : 'click or drag to go through'}</p>
+                    <div style={{ width: isMobile ? Math.min(window.innerWidth - 48, 300) : 320, height: isMobile ? 380 : 420, position: 'relative' }}>
                         <Stack
                             randomRotation
                             sendToBackOnClick
-                            sensitivity={150}
+                            sensitivity={isMobile ? 80 : 150}
                             onComplete={() => loadQuestions()}
                             cards={questions.map(q => (
                                 <div
                                     key={q.id}
-                                    className="relative w-full h-full rounded-md flex items-center justify-center p-8 select-none"
-                                    style={{ backgroundColor: '#FDFDFD' }}
+                                    className="relative w-full h-full rounded-md flex items-center justify-center p-6 sm:p-8 select-none"
+                                    style={{ backgroundColor: '#FDFDFD', border: '1px solid #53131E', outline: '1px solid #53131E', outlineOffset: '-4px' }}
                                 >
-                                    <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ width: 320, height: 420 }}>
-                                        <rect x="2" y="2" width="316" height="416" rx="7" fill="none" stroke="#53131E" strokeWidth="1" />
-                                        <rect x="5" y="5" width="310" height="410" rx="5" fill="none" stroke="#53131E" strokeWidth="1" />
-                                    </svg>
-                                    <p className="text-base font-medium leading-relaxed text-center text-zinc-800">
+                                    <p className="text-sm sm:text-base font-medium leading-relaxed text-center text-zinc-800">
                                         {q.text}
                                     </p>
                                 </div>

@@ -38,6 +38,7 @@ function CardComponent({ card, index, total, isTop, sensitivity, sendToBackOnCli
         cursor: isTop ? 'grab' : 'default',
         top: 0,
         left: 0,
+        touchAction: 'none',
       }}
       drag={isTop}
       dragElastic={0.15}
