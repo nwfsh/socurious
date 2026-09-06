@@ -286,7 +286,7 @@ return (
                 </div>
             )}
             {!loading && questions.length > 0 && gameMode && (
-                <div className="flex flex-col items-center gap-3 -mt-2">
+                <div className="flex flex-col items-center gap-3 mt-8">
                     <p className="text-xs text-zinc-500">{isMobile ? 'tap or swipe to go through' : 'click or drag to go through'}</p>
                     <div style={{ width: isMobile ? Math.min(window.innerWidth - 48, 270) : 290, height: isMobile ? 340 : 380, position: 'relative' }}>
                         <Stack
