@@ -1,9 +1,7 @@
 from src.transform.classify import get_conn
 
-## only file that touches the database and queries it
-
 def fetch_random_question(
-        topic: str | None = None,
+        topic: list[str] | None = None,
         min_intimacy: float | None = None,
         max_intimacy: float | None = None,
         ):
@@ -13,8 +11,12 @@ def fetch_random_question(
     params = []
 
     if topic:
-        conditions.append("c.name = %s")
-        params.append(topic)
+        # join %s by the number of topics written, eg: placeholders = '%s,%s'
+        placeholders = ','.join(['%s'] * len(topic))
+        conditions.append(f"c.name IN ({placeholders})")
+        # extend lets u write WHERE c.name IN (%s,%s)
+        # -    with params ['relationships', 'career']
+        params.extend(topic)
 
     if min_intimacy is not None:
         conditions.append("q.intimacy_score >= %s")
@@ -26,7 +28,7 @@ def fetch_random_question(
 
     where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
 
-    if topic or min_intimacy is not None or max_intimacy is not None:
+    if conditions:
         row = conn.execute(f"""
             SELECT q.id, q.text, q.intimacy_score
             FROM questions q
@@ -48,7 +50,7 @@ def fetch_random_question(
     return {"id": row[0], "text": row[1], "intimacy_score": float(row[2])} if row else None
 
 def fetch_random_questions(
-        topic: str | None = None,
+        topic: list[str] | None = None,
         min_intimacy: float | None = None,
         max_intimacy: float | None = None,
         limit: int = 12):
@@ -58,8 +60,9 @@ def fetch_random_questions(
     params = []
 
     if topic:
-        conditions.append("c.name = %s")
-        params.append(topic)
+        placeholders = ','.join(['%s'] * len(topic))
+        conditions.append(f"c.name IN ({placeholders})")
+        params.extend(topic)
 
     if min_intimacy is not None:
         conditions.append("q.intimacy_score >= %s")
