@@ -183,7 +183,7 @@ return (
                 {
                     icon: <Gamepad2 size={18} />,
                     label: "Game Mode",
-                    onClick: () => setGameMode(true),
+                    onClick: () => setGameMode(o => !o),
                 },
             ]}
             panelHeight={80}
@@ -267,23 +267,33 @@ return (
                 </div>
             )}
             {!loading && questions.length > 0 && gameMode && (
-                <div className="flex flex-col items-center gap-3 mt-8">
+                <div className="flex flex-col items-center gap-3 -mt-2">
                     <p className="text-xs text-zinc-500">click or drag to go through</p>
                     <div style={{ width: 320, height: 420, position: 'relative' }}>
                         <Stack
                             randomRotation
                             sendToBackOnClick
                             sensitivity={150}
+                            onComplete={() => loadQuestions()}
                             cards={questions.map(q => (
                                 <div
                                     key={q.id}
-                                    className="w-full h-full rounded-xl border border-zinc-200 flex items-center justify-center p-8 select-none"
+                                    className="relative w-full h-full rounded-md flex items-center justify-center p-8 select-none"
                                     style={{ backgroundColor: '#FDFDFD' }}
                                 >
+                                    <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
+                                        <rect
+                                            x="1" y="1" width="99%" height="99%"
+                                            rx="7" fill="none"
+                                            stroke="#53131E" strokeWidth="1"
+                                            strokeLinecap="square" strokeDasharray="5 5"
+                                            style={{ animation: "marchingDots 2s linear infinite" }}
+                                        />
+                                    </svg>
                                     <p className="text-base font-medium leading-relaxed text-center text-zinc-800">
                                         {q.text}
                                     </p>
-                            </div>
+                                </div>
                         ))}
                     />
                 </div>

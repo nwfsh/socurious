@@ -64,10 +64,12 @@ type StackProps = {
   randomRotation?: boolean
   sensitivity?: number
   sendToBackOnClick?: boolean
+  onComplete?: () => void
 }
 
-export default function Stack({ cards, randomRotation = false, sensitivity = 150, sendToBackOnClick = true }: StackProps) {
+export default function Stack({ cards, randomRotation = false, sensitivity = 150, sendToBackOnClick = true, onComplete }: StackProps) {
   const rotations = useRef(cards.map(() => randomRotation ? (Math.random() - 0.5) * 12 : 0))
+  const cycleCount = useRef(0)
 
   const [items, setItems] = useState<CardItem[]>(
     cards.map((card, i) => ({ id: i, content: card, rotation: rotations.current[i] }))
@@ -80,6 +82,8 @@ export default function Stack({ cards, randomRotation = false, sensitivity = 150
       const next = [...prev]
       next.splice(idx, 1)
       next.unshift(item)
+      cycleCount.current += 1
+      if (cycleCount.current >= prev.length) onComplete?.()
       return next
     })
   }
