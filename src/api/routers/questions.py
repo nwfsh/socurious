@@ -6,7 +6,7 @@ from typing import List
 router = APIRouter()
 
 @router.get("/random")
-@limiter.limit("60/minute")
+@limiter.limit("12/minute")
 def random_question(
         request: Request,
         topic: List[str] | None = Query(None, max_length=20),
@@ -17,7 +17,7 @@ def random_question(
     return get_random_question(topic=topic, min_intimacy=min_intimacy, max_intimacy=max_intimacy)
 
 @router.get("/random/batch")
-@limiter.limit("60/minute")
+@limiter.limit("12/minute")
 def random_questions(
         request: Request,
         topic: List[str]| None = Query(None, max_length=20),

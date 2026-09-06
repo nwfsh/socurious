@@ -13,8 +13,8 @@ export function QuestionCard({ question }: { question: Question }) {
               <rect
                   x="1"
                   y="1"
-                  width="calc(100% - 2px)"
-                  height="calc(100% - 2px)"
+                  width="99%"
+                  height="99%"
                   rx="7"
                   fill="none"
                   stroke="#53131E"

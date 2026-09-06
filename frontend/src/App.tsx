@@ -17,20 +17,6 @@ type Question = {
     intimacy_score: number;
 };
 
-async function fetchQuestions(min: number, max: number, cats: Set<string>): Promise<Question[]> {
-    const params = new URLSearchParams({
-        limit: '16',
-        min_intimacy: (min / 100).toFixed(2),
-        max_intimacy: (max / 100).toFixed(2),
-
-    })
-    cats.forEach(cat => params.append('topic', cat))
-    const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/questions/random/batch?${params}`
-    );
-
-    return res.json()
-}
 
 function drawDither() {
   const canvas = document.getElementById('dither') as HTMLCanvasElement
@@ -56,6 +42,7 @@ function App() {
 
 const [questions, setQuestions] = useState<Question[]>([])
 const [loading, setLoading] = useState(false)
+const [rateLimited, setRateLimited] = useState(false)
 const [intimacy, setIntimacy] = useState<[number, number]>([-25, 60])
 const [catOpen, setCatOpen] = useState(false)
 const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set())
@@ -71,7 +58,20 @@ function toggleCat(cat: string) {
 
 async function loadQuestions(min = intimacy[0], max = intimacy[1], cats = selectedCats) {
   setLoading(true)
-  const q = await fetchQuestions(min, max, cats)
+  setRateLimited(false)
+  const res = await fetch(
+    `${import.meta.env.VITE_API_URL}/questions/random/batch?${(() => {
+      const p = new URLSearchParams({ limit: '16', min_intimacy: (min / 100).toFixed(2), max_intimacy: (max / 100).toFixed(2) })
+      cats.forEach(cat => p.append('topic', cat))
+      return p
+    })()}`
+  )
+  if (res.status === 429) {
+    setRateLimited(true)
+    setLoading(false)
+    return
+  }
+  const q = await res.json()
   setQuestions(q)
   setLoading(false)
 }
@@ -88,6 +88,21 @@ useEffect(() => {
 
 return (
     <>
+        {rateLimited && (
+            <div className="fixed inset-0 flex items-center justify-center z-[100] pointer-events-none">
+                <div className="pointer-events-auto bg-zinc-900 border border-white/10 rounded-xl px-6 py-4 flex items-center gap-4 shadow-xl">
+                    <span className="text-sm text-zinc-200">
+                        you're going too fast {":("}, take your time to read
+                    </span>
+                    <button
+                        onClick={() => setRateLimited(false)}
+                        className="text-xs text-zinc-500 hover:text-white transition-colors"
+                    >
+                        close
+                    </button>
+                </div>
+            </div>
+        )}
         <svg
             style={{
                 position: "absolute",
@@ -251,7 +266,12 @@ return (
         </div>
         <footer className="fixed bottom-0 left-0 w-full text-center text-xs text-zinc-500 pb-3 pointer-events-none">
             questions sourced from{" "}
-            <a href="https://reddit.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-300 pointer-events-auto">
+            <a
+                href="https://reddit.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-zinc-300 pointer-events-auto"
+            >
                 reddit
             </a>
         </footer>
