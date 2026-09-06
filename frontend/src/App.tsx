@@ -17,12 +17,14 @@ type Question = {
     intimacy_score: number;
 };
 
-async function fetchQuestions(min: number, max: number): Promise<Question[]> {
+async function fetchQuestions(min: number, max: number, cats: Set<string>): Promise<Question[]> {
     const params = new URLSearchParams({
         limit: '16',
         min_intimacy: (min / 100).toFixed(2),
         max_intimacy: (max / 100).toFixed(2),
+
     })
+    cats.forEach(cat => params.append('topic', cat))
     const res = await fetch(`/questions/random/batch?${params}`)
     return res.json()
 }
@@ -59,13 +61,14 @@ function toggleCat(cat: string) {
   setSelectedCats(prev => {
     const next = new Set(prev)
     next.has(cat) ? next.delete(cat) : next.add(cat)
+    loadQuestions(intimacy[0], intimacy[1], next)
     return next
   })
 }
 
-async function loadQuestions(min = intimacy[0], max = intimacy[1]) {
+async function loadQuestions(min = intimacy[0], max = intimacy[1], cats = selectedCats) {
   setLoading(true)
-  const q = await fetchQuestions(min, max)
+  const q = await fetchQuestions(min, max, cats)
   setQuestions(q)
   setLoading(false)
 }
@@ -125,12 +128,12 @@ return (
             </defs>
         </svg>
         {catOpen && (
-            <div className="fixed bottom-36 left-1/2 -translate-x-1/2 z-50 bg-zinc-900/95 backdrop-blur-md border border-white/10 rounded-2xl p-3 shadow-xl grid grid-cols-3 gap-1.5 w-max">
+            <div className="fixed bottom-36 left-1/2 -translate-x-1/2 z-50 bg-zinc-900/95 backdrop-blur-md border border-white/10 rounded-lg p-3 shadow-xl grid grid-cols-3 gap-1.5 w-max">
                 {CATEGORIES.map((cat) => (
                     <button
                         key={cat}
                         onClick={() => toggleCat(cat)}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm capitalize transition-colors text-left ${selectedCats.has(cat) ? "bg-[#53131E] text-white" : "text-zinc-300 hover:bg-white/10"}`}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm capitalize transition-colors text-left ${selectedCats.has(cat) ? "bg-[#53131E] text-white" : "text-zinc-300 hover:bg-white/10"}`}
                     >
                         {selectedCats.has(cat) && (
                             <Check size={12} strokeWidth={3} />
@@ -167,26 +170,26 @@ return (
             baseItemSize={52}
             magnification={72}
         >
-            <div className="flex flex-col gap-1.5 px-2">
+            <div className="flex flex-col items-center gap-1.5 px-2">
                 <span className="text-xs text-zinc-400">intimacy</span>
                 <div className="flex items-center gap-2">
                     <span className="text-xs text-zinc-500">low</span>
                     <div className="w-36">
-                    <Slider
-                        min={-25}
-                        max={100}
-                        step={1}
-                        value={intimacy}
-                        onValueChange={(v) =>
-                            setIntimacy(v as [number, number])
-                        }
-                        onValueCommitted={(v) =>
-                            loadQuestions(
-                                (v as number[])[0],
-                                (v as number[])[1]
-                            )
-                        }
-                    />
+                        <Slider
+                            min={-25}
+                            max={60}
+                            step={1}
+                            value={intimacy}
+                            onValueChange={(v) =>
+                                setIntimacy(v as [number, number])
+                            }
+                            onValueCommitted={(v) =>
+                                loadQuestions(
+                                    (v as number[])[0],
+                                    (v as number[])[1]
+                                )
+                            }
+                        />
                     </div>
                     <span className="text-xs text-zinc-500">high</span>
                 </div>
@@ -194,24 +197,35 @@ return (
         </Dock>
         <div className="min-h-screen flex flex-col items-center gap-6 p-8 pt-16 pb-32">
             <h1
-                className="text-8xl tracking-tight pointer-events-auto"
-                style={{
-                    color: "#53131E",
-                    fontFamily: "'Barrio', cursive",
-                    filter: "url(#grain)",
-                }}
+                className="text-9xl tracking-tight pointer-events-auto"
+                style={{ color: "#53131E", filter: "url(#grain)" }}
             >
-                <DecryptedText
-                    text="SoCurious"
-                    animateOn="hover"
-                    sequential
-                    revealDirection="center"
-                    speed={100}
-                />
+                <span style={{ fontFamily: "'Fraunces', serif" }}>
+                    <DecryptedText
+                        text="So"
+                        animateOn="hover"
+                        sequential
+                        revealDirection="center"
+                        speed={100}
+                    />
+                </span>
+                <span style={{ fontFamily: "'Fraunces', serif" }}>
+                    <DecryptedText
+                        text="Curious"
+                        animateOn="hover"
+                        sequential
+                        revealDirection="center"
+                        speed={100}
+                    />
+                </span>
             </h1>
-            <p className="text-bg text-zinc-600 -mt-4">
-                Curated questions to grow closer to one another. 
-                Not family friendly yet .. be kind about spelling mistakes  
+            <p className="text-base text-zinc-600 -mt-4">
+                Curated questions to grow closer to one another.
+            </p>
+            <p className="text-xs  text-zinc-400 -mt-6">
+                not fully SFW yet · typos happen · sourced from reddit, so
+                occasionally in french · question quality varies · possibly
+                offensive & unhinged ·
             </p>
             <hr className="w-full max-w-6xl border-1.5 border-zinc-300" />
             <hr className="w-full max-w-6xl border-1.5 border-zinc-400 -mt-4" />
@@ -220,7 +234,7 @@ return (
             )}
             {!loading && questions.length > 0 && (
                 <div
-                    className="grid gap-4 w-full max-w-6xl mt-8"
+                    className="grid gap-4 w-full max-w-6xl mt-2"
                     style={{
                         gridTemplateColumns:
                             "repeat(auto-fill, minmax(220px, 1fr))",
@@ -232,6 +246,12 @@ return (
                 </div>
             )}
         </div>
+        <footer className="fixed bottom-0 left-0 w-full text-center text-xs text-zinc-500 pb-3 pointer-events-none">
+            questions sourced from{" "}
+            <a href="https://reddit.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-300 pointer-events-auto">
+                reddit
+            </a>
+        </footer>
     </>
 );
 

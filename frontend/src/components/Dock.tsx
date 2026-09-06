@@ -54,29 +54,36 @@ export default function Dock({ items, children, panelHeight = 68, baseItemSize =
   const mouseX = useMotionValue(Infinity)
 
   return (
-    <motion.div
-      onMouseMove={(e) => mouseX.set(e.clientX)}
-      onMouseLeave={() => mouseX.set(Infinity)}
-      className="fixed bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 rounded-2xl border border-white/10 bg-zinc-900/90 backdrop-blur-md px-5 z-50"
-      style={{ height: panelHeight }}
+    <div
+      className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50"
+      style={{ overflow: 'visible' }}
     >
-      {children && (
-        <>
-          {children}
-          <div className="w-px self-stretch bg-white/20 my-3" />
-        </>
-      )}
-      <div className="flex items-end gap-3">
-        {items.map((item) => (
-          <DockItem
-            key={item.label}
-            item={item}
-            baseItemSize={baseItemSize}
-            magnification={magnification}
-            mouseX={mouseX}
-          />
-        ))}
-      </div>
-    </motion.div>
+      <motion.div
+        onMouseMove={(e) => mouseX.set(e.clientX)}
+        onMouseLeave={() => mouseX.set(Infinity)}
+        className="flex items-center gap-3 rounded-2xl border border-white/10 bg-zinc-900 px-5"
+        style={{ height: panelHeight, filter: 'url(#grain)' }}
+      >
+        <div className="relative flex items-center gap-3 z-10">
+          {children && (
+            <>
+              {children}
+              <div className="w-px self-stretch bg-white/20 my-3" />
+            </>
+          )}
+          <div className="flex items-end gap-3">
+            {items.map((item) => (
+              <DockItem
+                key={item.label}
+                item={item}
+                baseItemSize={baseItemSize}
+                magnification={magnification}
+                mouseX={mouseX}
+              />
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </div>
   )
 }
