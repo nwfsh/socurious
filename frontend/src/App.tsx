@@ -90,7 +90,7 @@ return (
     <>
         {rateLimited && (
             <div className="fixed inset-0 flex items-center justify-center z-[100] pointer-events-none">
-                <div className="pointer-events-auto bg-zinc-900 border border-white/10 rounded-xl px-6 py-4 flex items-center gap-4 shadow-xl">
+                <div className="pointer-events-auto bg-zinc-900 border border-white/10 rounded-none px-6 py-4 flex items-center gap-4 shadow-xl">
                     <span className="text-sm text-zinc-200">
                         you're going too fast {":("}, take your time to read
                     </span>
@@ -180,7 +180,7 @@ return (
                 },
                 {
                     icon: <Gamepad2 size={18} />,
-                    label: "Game Mode",
+                    label: "Game Mode, Coming Soon..",
                     onClick: () => {},
                 },
             ]}
@@ -242,8 +242,9 @@ return (
             </p>
             <p className="text-xs  text-zinc-400 -mt-6">
                 not fully SFW yet · typos happen · sourced from reddit, so
-                occasionally in french · question quality varies · possibly
-                offensive & unhinged ·
+                occasionally in french ·
+                <br /> · question quality varies · possibly offensive & unhinged
+                · report button coming soon ·
             </p>
             <hr className="w-full max-w-6xl border-1.5 border-zinc-300" />
             <hr className="w-full max-w-6xl border-1.5 border-zinc-400 -mt-4" />
