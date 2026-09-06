@@ -38,7 +38,7 @@ def is_too_short(title: str, min_words: int = 4) -> bool:
 
 def targets_specific_group(title: str) -> bool:
     t = title.lower()
-    patterns = ["people who", "for those with", "to the people of", "to those who", " as a ", "what are your stories"]
+    patterns = ["people who", "for those with", "to the people of", "to those who", " as a ", "what are your stories", "in reddit"]
     return any(p in t for p in patterns)
 
 def targets_reddit_audience(title: str) -> bool:
