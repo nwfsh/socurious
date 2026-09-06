@@ -281,14 +281,9 @@ return (
                                     className="relative w-full h-full rounded-md flex items-center justify-center p-8 select-none"
                                     style={{ backgroundColor: '#FDFDFD' }}
                                 >
-                                    <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
-                                        <rect
-                                            x="1" y="1" width="99%" height="99%"
-                                            rx="7" fill="none"
-                                            stroke="#53131E" strokeWidth="1"
-                                            strokeLinecap="square" strokeDasharray="5 5"
-                                            style={{ animation: "marchingDots 2s linear infinite" }}
-                                        />
+                                    <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ width: 320, height: 420 }}>
+                                        <rect x="2" y="2" width="316" height="416" rx="7" fill="none" stroke="#53131E" strokeWidth="1" />
+                                        <rect x="5" y="5" width="310" height="410" rx="5" fill="none" stroke="#53131E" strokeWidth="1" />
                                     </svg>
                                     <p className="text-base font-medium leading-relaxed text-center text-zinc-800">
                                         {q.text}
