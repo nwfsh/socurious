@@ -9,7 +9,7 @@ export function QuestionCard({ question }: { question: Question }) {
           className="relative group w-full rounded-md border"
           style={{ backgroundColor: "#FDFDFD" }}
       >
-          <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md overflow-visible">
+          <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-300 rounded-md overflow-visible">
               <rect
                   x="1"
                   y="1"

@@ -147,6 +147,9 @@ body {
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+@keyframes marchingDots {
+  to { stroke-dashoffset: -10; }
+}
 
 @layer base {
   * {

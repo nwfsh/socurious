@@ -226,7 +226,7 @@ return (
 
         <div className="min-h-screen flex flex-col items-center gap-6 p-8 pt-16 pb-32">
             <h1
-                className="text-5xl sm:text-9xl tracking-tight pointer-events-auto"
+                className="text-7xl sm:text-9xl tracking-tight pointer-events-auto"
                 style={{ color: "#53131E", filter: "url(#grain)" }}
             >
                 <span style={{ fontFamily: "'Fraunces', serif" }}>
