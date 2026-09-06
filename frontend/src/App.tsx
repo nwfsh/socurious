@@ -3,7 +3,7 @@ import { QuestionCard } from './components/QuestionCard'
 import DecryptedText from './components/DecryptedText'
 import Dock from './components/Dock'
 import { Slider } from './components/ui/slider'
-import { Home, RefreshCw, Layers, Gamepad2, Check } from 'lucide-react'
+import { RefreshCw, Layers, Gamepad2, Check } from 'lucide-react'
 
 const CATEGORIES = [
   'relationships', 'family and childhood', 'career',
@@ -25,7 +25,10 @@ async function fetchQuestions(min: number, max: number, cats: Set<string>): Prom
 
     })
     cats.forEach(cat => params.append('topic', cat))
-    const res = await fetch(`/questions/random/batch?${params}`)
+    const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/questions/random/batch?${params}`
+    );
+
     return res.json()
 }
 
