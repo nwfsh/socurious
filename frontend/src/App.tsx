@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import { QuestionCard } from './components/QuestionCard'
 import DecryptedText from './components/DecryptedText'
 import Dock from './components/Dock'
+import Stack from './components/Stack'
 import { Slider } from './components/ui/slider'
-import { RefreshCw, Layers, Gamepad2, Check } from 'lucide-react'
+import { RefreshCw, Layers, Gamepad2, Check, X } from 'lucide-react'
 
 const CATEGORIES = [
   'relationships', 'family and childhood', 'career',
@@ -43,6 +44,7 @@ function App() {
 const [questions, setQuestions] = useState<Question[]>([])
 const [loading, setLoading] = useState(false)
 const [rateLimited, setRateLimited] = useState(false)
+const [gameMode, setGameMode] = useState(false)
 const [intimacy, setIntimacy] = useState<[number, number]>([-25, 60])
 const [catOpen, setCatOpen] = useState(false)
 const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set())
@@ -180,8 +182,8 @@ return (
                 },
                 {
                     icon: <Gamepad2 size={18} />,
-                    label: "Game Mode, Coming Soon..",
-                    onClick: () => {},
+                    label: "Game Mode",
+                    onClick: () => setGameMode(true),
                 },
             ]}
             panelHeight={80}
@@ -265,6 +267,35 @@ return (
                 </div>
             )}
         </div>
+        {gameMode && (
+            <div className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center gap-6">
+                <button
+                    onClick={() => setGameMode(false)}
+                    className="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors"
+                >
+                    <X size={20} />
+                </button>
+                <p className="text-xs text-zinc-500">click or drag to go through</p>
+                <div style={{ width: 320, height: 420, position: 'relative' }}>
+                    <Stack
+                        randomRotation
+                        sendToBackOnClick
+                        sensitivity={150}
+                        cards={questions.map(q => (
+                            <div
+                                key={q.id}
+                                className="w-full h-full rounded-xl border border-zinc-700 flex items-center justify-center p-8 select-none"
+                                style={{ backgroundColor: '#FDFDFD' }}
+                            >
+                                <p className="text-base font-medium leading-relaxed text-center text-zinc-800">
+                                    {q.text}
+                                </p>
+                            </div>
+                        ))}
+                    />
+                </div>
+            </div>
+        )}
         <footer className="fixed bottom-0 left-0 w-full text-center text-xs text-zinc-500 pb-3 pointer-events-none">
             questions sourced from{" "}
             <a

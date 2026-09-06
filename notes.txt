@@ -83,3 +83,18 @@ It's hosted on Postgres via Neon, with GitHub Actions running the full pipeline 
 CORS — only your frontend domain can make browser requests to the API (other sites can't secretly call it from a user's browser)
 Security headers — standard browser protections (clickjacking, MIME sniffing, etc.)
 Docs disabled in prod — hides the interactive /docs page so people can't easily explore your API structure
+
+TOPIC_INTIMACY_BOUNDS = {
+    "sexual": (0.6, 1.0),           # only show at high intimacy
+    "controversial debate": (0.5, 1.0),
+    "fears/insecurities": (0.3, 1.0),
+    "family/childhood": (0.0, 1.0), # no restriction
+    "random everyday": (0.0, 0.5),  # keep light topics out of "deep" mode
+    "career": (0.0, 1.0),
+}
+
+def get_valid_contexts(topic: str, intimacy: float) -> bool:
+    low, high = TOPIC_INTIMACY_BOUNDS.get(topic, (0.0, 1.0))
+    return low <= intimacy <= high
+
+    ADD LATER 

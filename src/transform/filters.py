@@ -49,6 +49,16 @@ def is_ama_format(title: str) -> bool:
     """Reddit AMA posts: 'ama' as a standalone word, often with age/gender flair."""
     return bool(re.search(r'\bama\b', title.lower()))
 
+# might add 
+# DISCOURSE_MARKERS = {"honestly", "so", "ok", "wait", "also", "genuinely"}
+
+# def has_vocative_group_address(title: str) -> bool:
+#     match = re.match(r'^([A-Za-z][a-zA-Z\s]{2,25}),\s', title)
+#     if not match:
+#         return False
+#     leading = match.group(1).strip().lower()
+#     return leading not in DISCOURSE_MARKERS
+
 # remove cus less than 0.3% of data, and cannot filter accurately 
 # def is_english(title: str) -> bool:
 #     if len(title.split()) < 4:
