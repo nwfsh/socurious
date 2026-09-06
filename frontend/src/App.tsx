@@ -5,7 +5,7 @@ import Dock from './components/Dock'
 import Stack from './components/Stack'
 import { ModeSelectModal } from './components/ModeSelectModal'
 import { Slider } from './components/ui/slider'
-import { RefreshCw, Layers, Gamepad2, Check } from 'lucide-react'
+import { RefreshCw, Layers, Gamepad2, LayoutGrid, Check } from 'lucide-react'
 
 const CATEGORIES = [
   'relationships', 'family and childhood', 'career',
@@ -203,8 +203,8 @@ return (
                     onClick: () => loadQuestions(),
                 },
                 {
-                    icon: <Gamepad2 size={18} />,
-                    label: "Game Mode",
+                    icon: gameMode ? <LayoutGrid size={18} /> : <Gamepad2 size={18} />,
+                    label: gameMode ? "Feed" : "Game Mode",
                     onClick: () => setGameMode(o => !o),
                 },
             ]}
@@ -281,7 +281,7 @@ return (
                     className="grid gap-4 w-full max-w-6xl mt-2"
                     style={{
                         gridTemplateColumns:
-                            "repeat(auto-fill, minmax(190px, 1fr))",
+                            "repeat(auto-fill, minmax(220px, 1fr))",
                     }}
                 >
                     {questions.map((q) => (

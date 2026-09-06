@@ -5,7 +5,7 @@ type Props = {
 export function ModeSelectModal({ onSelect }: Props) {
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 animate-in fade-in duration-500">
-      <div className="bg-zinc-900 border border-white/10 rounded-sm p-6 sm:p-8 w-full max-w-sm shadow-2xl flex flex-col gap-6" style={{ filter: 'url(#grain)' }}>
+      <div className="bg-zinc-900/90 backdrop-blur-md border border-white/10 rounded-sm p-6 sm:p-8 w-full max-w-sm shadow-2xl flex flex-col gap-6" style={{ filter: 'url(#grain)' }}>
         <div className="flex flex-col gap-1">
           <h2 className="text-xl text-zinc-100" style={{ fontFamily: "'Fraunces', serif" }}>
             How do you want to explore?
@@ -35,7 +35,7 @@ export function ModeSelectModal({ onSelect }: Props) {
           </button>
         </div>
 
-        <p className="text-xs text-zinc-600 text-center -mt-3 -mb-2">you can switch anytime from the bottom bar</p>
+        <p className="text-xs text-center -mt-3 -mb-2" style={{ color: '#53131E' }}>You can switch anytime from the bottom bar.</p>
       </div>
     </div>
   )
