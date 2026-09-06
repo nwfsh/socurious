@@ -45,7 +45,7 @@ function App() {
 const [questions, setQuestions] = useState<Question[]>([])
 const [loading, setLoading] = useState(false)
 const [rateLimited, setRateLimited] = useState(false)
-const [showModeSelect, setShowModeSelect] = useState(true)
+const [showModeSelect, setShowModeSelect] = useState(false)
 const [gameMode, setGameMode] = useState(false)
 const [intimacy, setIntimacy] = useState<[number, number]>([-25, 60])
 const [isMobile, setIsMobile] = useState(() => window.innerWidth < 640)
@@ -88,7 +88,11 @@ useEffect(() => {
     setIsMobile(window.innerWidth < 640)
   }
   window.addEventListener('resize', handleResize)
-  return () => window.removeEventListener('resize', handleResize)
+  const modalTimer = setTimeout(() => setShowModeSelect(true), 2000)
+  return () => {
+    window.removeEventListener('resize', handleResize)
+    clearTimeout(modalTimer)
+  }
 }, [])
 
 useEffect(() => {
