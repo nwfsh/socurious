@@ -1,4 +1,8 @@
-from src.transform.classify import get_conn
+import os
+import psycopg
+
+def get_conn():
+    return psycopg.connect(os.getenv("DATABASE_URL"))
 
 def fetch_random_question(
         topic: list[str] | None = None,
