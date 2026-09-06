@@ -14,7 +14,8 @@ def extract_question(text: str) -> str | None:
     
     # split at ? 
     question_part, _, trailing = text.partition("?")
-    return (question_part + "?").strip()
+    cleaned = (question_part + "?").strip()
+    return cleaned[0].upper() + cleaned[1:] if cleaned else cleaned
 
 
 def contains_i_pronoun(title:str) -> bool:
@@ -29,11 +30,11 @@ def contains_my_pronoun(title: str) -> bool:
 def contains_im_pronoun(title: str) -> bool:
     return bool(re.search(r'\bim\b', title, re.IGNORECASE))
 
-# want better questions + not dumb and surface ones 
 def is_too_short(title: str, min_words: int = 4) -> bool:
     if title is None:
         return False
-    return len(title.strip().split()) < min_words
+    words = [w for w in title.strip().split() if any(c.isalnum() for c in w)]
+    return len(words) < min_words
 
 def targets_specific_group(title: str) -> bool:
     t = title.lower()

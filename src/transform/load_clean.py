@@ -12,7 +12,6 @@ load_dotenv()
 # loading in embedding model 
 _model = SentenceTransformer('all-MiniLM-L6-v2')
 SIMILARITY_THRESHOLD = 0.90
-
 INTIMACY_FLOOR = -0.25
 
 def load_clean_questions():

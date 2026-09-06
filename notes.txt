@@ -79,3 +79,7 @@ Classification is two-stage: zero-shot topic tagging via a DeBERTa model, and in
 Deduplication is sentence-embedding similarity, not fuzzy string matching — I ran both against real data and adversarial test cases, embeddings caught paraphrase-duplicates fuzzy matching structurally couldn't see, same false-positive rate.
 Schema-wise, one real architectural decision worth mentioning: I originally modeled topic, intimacy, and audience-appropriateness as a three-way relationship, caught it was a spurious ternary — audience-appropriateness is actually a function of the other two, not independent — and moved it to be computed at query time instead of stored, which also unlocks features like a closeness slider without any data migration.
 It's hosted on Postgres via Neon, with GitHub Actions running the full pipeline on a schedule, model caching to keep CI runs efficient."
+
+CORS — only your frontend domain can make browser requests to the API (other sites can't secretly call it from a user's browser)
+Security headers — standard browser protections (clickjacking, MIME sniffing, etc.)
+Docs disabled in prod — hides the interactive /docs page so people can't easily explore your API structure
