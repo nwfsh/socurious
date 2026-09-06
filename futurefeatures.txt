@@ -1,0 +1,6 @@
+- faeture to all grammarly api to fix certain sentence structure when has 
+- more than 5 bad grammar dislikes
+
+- offensive question manual review
+
+- let users who log in curate their own question sets !!
