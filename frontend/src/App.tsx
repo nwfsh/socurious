@@ -240,8 +240,8 @@ return (
             <p className="text-base text-zinc-600 -mt-4">
                 Curated questions to grow closer to one another.
             </p>
-            <p className="text-xs  text-zinc-400 -mt-6">
-                not fully SFW yet · typos happen · sourced from reddit, so
+            <p className="text-xs text-center text-zinc-400 -mt-4">
+                · not fully SFW yet · typos happen · sourced from reddit, so
                 occasionally in french ·
                 <br /> · question quality varies · possibly offensive & unhinged
                 · report button coming soon ·
