@@ -228,3 +228,6 @@ model_cache/
 frontend/node_modules/
 frontend/dist/
 frontend/.oxlintrc.json
+
+# Trained ML models (src/ml)
+models/
