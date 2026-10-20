@@ -3,7 +3,7 @@ import { QuestionCard } from './components/QuestionCard'
 import DecryptedText from './components/DecryptedText'
 import Dock from './components/Dock'
 import Stack from './components/Stack'
-import { ModeSelectModal } from './components/ModeSelectModal'
+// import { ModeSelectModal } from './components/ModeSelectModal'
 import { Slider } from './components/ui/slider'
 import { RefreshCw, Layers, Gamepad2, LayoutGrid, Check } from 'lucide-react'
 
@@ -45,7 +45,7 @@ function App() {
 const [questions, setQuestions] = useState<Question[]>([])
 const [loading, setLoading] = useState(false)
 const [rateLimited, setRateLimited] = useState(false)
-const [showModeSelect, setShowModeSelect] = useState(false)
+// const [showModeSelect, setShowModeSelect] = useState(false)
 const [gameMode, setGameMode] = useState(false)
 const [intimacy, setIntimacy] = useState<[number, number]>([-25, 60])
 const [isMobile, setIsMobile] = useState(() => window.innerWidth < 640)
@@ -88,10 +88,10 @@ useEffect(() => {
     setIsMobile(window.innerWidth < 640)
   }
   window.addEventListener('resize', handleResize)
-  const modalTimer = setTimeout(() => setShowModeSelect(true), 2000)
+  // const modalTimer = setTimeout(() => setShowModeSelect(true), 2000)
   return () => {
     window.removeEventListener('resize', handleResize)
-    clearTimeout(modalTimer)
+    // clearTimeout(modalTimer)
   }
 }, [])
 
@@ -101,14 +101,14 @@ useEffect(() => {
 
 return (
     <>
-        {showModeSelect && (
+        {/* {showModeSelect && (
             <ModeSelectModal
                 onSelect={(mode) => {
                     setGameMode(mode === 'game')
                     setShowModeSelect(false)
                 }}
             />
-        )}
+        )} */}
         {rateLimited && (
             <div className="fixed inset-0 flex items-center justify-center z-[100] pointer-events-none">
                 <div className="pointer-events-auto bg-zinc-900 border border-white/10 rounded-none px-6 py-4 flex items-center gap-4 shadow-xl">
