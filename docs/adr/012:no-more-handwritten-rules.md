@@ -51,11 +51,11 @@ Not every rule in `should_reject` is about directedness. Rules that check a ques
 
 New pipeline order: format rules → directedness classifier (+ rewriter) → intimacy floor → near-dup check. The classifier runs before intimacy and dedup because a rewritten question can change both scores.
 
-The two replaced rules stay in `should_reject` until the classifier ships, since they're the baseline being scored in Step 2. Splitting the pipeline is the last step, not the first.
+`should_reject` in `src/transform/filters.py` is split into these two layers: `format_reject` (layer 1, the rules that stay) runs first, then `directed_reject` (layer 2). Layer 2 still holds the two regex rules for now, since they're the baseline being scored in Step 2. When the classifier ships, it replaces the inside of `directed_reject` and nothing else in the pipeline changes.
 
 ### Step 1: Build the labeled data
 
-**Where questions come from.** Sample from `raw_questions`, keeping only the questions that pass the rules that stay. Re-run those rules in Python at sampling time rather than trusting the stored `rejection_reason`. `should_reject` stops at the first rule that fires, so a stored `contains_certain_group` was never checked against `is_ama_format`, which runs after it. Questions the two replaced rules rejected must be included, or those rules can't be scored. Draw from two pools and record which pool each question came from:
+**Where questions come from.** Sample from `raw_questions`, keeping only the questions that pass the rules that stay. Re-run those rules in Python at sampling time rather than trusting the stored `rejection_reason`. Rows filtered before the two-layer split were checked in the old order, where `is_ama_format` ran after the group rules, so a stored `contains_certain_group` was never checked against it. Questions the two replaced rules rejected must be included, or those rules can't be scored. Draw from two pools and record which pool each question came from:
 
 - **Random pool:** an unbiased slice of the raw data, so precision and recall estimates reflect the real mix.
 - **Enriched pool:** questions containing group words (men, women, ladies, guys, "who", "as a"). Directed questions are only ~5% of the raw data, so without this the rare labels get too few examples. It also brings in hard negatives like "Why do men…" and "What do women wish…", so the labels (and later the models) separate structure from "mentions men".
