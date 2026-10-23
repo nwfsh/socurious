@@ -1,0 +1,12 @@
+<!-- paste this into label studio: project settings -> labeling interface -> code -->
+<!-- from_name "label" + to_name "text" have to match what prelabel.py writes -->
+<View>
+  <Header value="Take out who it's addressed to. Can a typical partner still answer it from their own life?"/>
+  <Text name="text" value="$text"/>
+  <Choices name="label" toName="text" choice="single" showInLine="true" required="true">
+    <Choice value="general" hint="anyone can answer as written" hotkey="1"/>
+    <Choice value="fixable" hint="aimed at a group, answerable once the address is stripped" hotkey="2"/>
+    <Choice value="unsalvageable" hint="only the addressed group can answer" hotkey="3"/>
+    <Choice value="unsure" hotkey="4"/>
+  </Choices>
+</View>
