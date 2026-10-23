@@ -60,7 +60,7 @@ def main():
             return
 
     labels = read_jsonl(out_path)
-    done = {row["id"] for row in labels}
+    done = {row["id"] for row in labels} & {q["id"] for q in pool}
     todo = [q for q in pool if q["id"] not in done]
     skipped = []
 
