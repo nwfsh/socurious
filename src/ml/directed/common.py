@@ -6,10 +6,7 @@ import re
 from pathlib import Path
 
 from src.ml.common import ROOT, MODELS_DIR, read_jsonl, write_jsonl, append_jsonl
-from src.transform.filters import (
-    extract_question, is_too_short, is_ama_format,
-    contains_i_pronoun, contains_me_pronoun, contains_my_pronoun, contains_im_pronoun,
-)
+from src.transform.filters import format_reject
 
 DATA_DIR = Path(os.getenv("SOCURIOUS_DIRECTED_DIR", ROOT / "data" / "directed"))
 
@@ -50,17 +47,11 @@ LEADING_ADDRESS = re.compile(r"^[^,:?]{2,40}[,:]\s")  # "Ladies, ..." / "Nurses 
 
 
 def passes_format_rules(title: str) -> str | None:
-    """the should_reject rules that STAY (ADR 012, 'which rules stay').
+    """layer 1 of the filters (format_reject), the rules that stay (ADR 012, 'which rules stay').
     returns the cleaned question, or None if a format rule rejects it.
-    rerun here instead of trusting rejection_reason, since should_reject stops at the first rule that fires"""
-    q = extract_question(title)
-    if q is None or is_too_short(q):
-        return None
-    if contains_i_pronoun(q) or contains_me_pronoun(q) or contains_my_pronoun(q) or contains_im_pronoun(q):
-        return None
-    if is_ama_format(q):
-        return None
-    return q
+    rerun here instead of trusting rejection_reason, rows filtered before the two-layer split were checked in the old order"""
+    rejected, _, question = format_reject(title)
+    return None if rejected else question
 
 
 def is_enriched(text: str) -> bool:
