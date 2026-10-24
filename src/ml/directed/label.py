@@ -8,16 +8,11 @@
 ## usage: python3 -m src.ml.directed.label [--relabel]
 
 import argparse
-import random
-from datetime import datetime, timedelta
+from datetime import datetime
 from src.ml.directed.common import (
     TEST_POOL_PATH, TEST_PATH, RELABEL_PATH, LABELS, UNSURE, DEFINITIONS,
-    read_jsonl, write_jsonl, append_jsonl,
+    relabel_pool, days_until_relabel, read_jsonl, write_jsonl, append_jsonl,
 )
-
-SEED = 42
-RELABEL_SIZE = 50
-RELABEL_WAIT = timedelta(days=7)
 
 KEYS = {"1": LABELS[0], "2": LABELS[1], "3": LABELS[2], "4": UNSURE}
 
@@ -32,15 +27,12 @@ def relabel_todo(test_labels):
     if not test_labels:
         print("no test labels yet, label the test pool first")
         return None
-    last = max(datetime.fromisoformat(r["labeled_at"]) for r in test_labels)
-    if datetime.now() - last < RELABEL_WAIT:
-        days = (RELABEL_WAIT - (datetime.now() - last)).days + 1
-        print(f"heads up: ur last test label was {last:%b %d}, wait ~{days} more day(s) or ull just remember ur answers")
+    days = days_until_relabel(test_labels)
+    if days:
+        print(f"heads up: wait ~{days} more day(s) since ur last test label or ull just remember ur answers")
         if input("relabel anyway? [y/N] ").strip().lower() != "y":
             return None
-    ## same 50 every time, so quitting halfway and coming back is fine
-    picked = random.Random(SEED).sample(test_labels, min(RELABEL_SIZE, len(test_labels)))
-    return [{"id": r["id"], "text": r["text"]} for r in picked]
+    return relabel_pool(test_labels)
 
 
 def main():

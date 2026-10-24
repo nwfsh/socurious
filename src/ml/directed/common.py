@@ -3,6 +3,8 @@
 
 import os
 import re
+import random
+from datetime import datetime, timedelta
 from pathlib import Path
 
 from src.ml.common import ROOT, MODELS_DIR, read_jsonl, write_jsonl, append_jsonl
@@ -56,3 +58,22 @@ def passes_format_rules(title: str) -> str | None:
 
 def is_enriched(text: str) -> bool:
     return bool(GROUP_WORDS.search(text) or LEADING_ADDRESS.search(text))
+
+
+## relabel (for kappa), shared by label.py + app.py so both pick the exact same 50
+RELABEL_SEED = 42
+RELABEL_SIZE = 50
+RELABEL_WAIT = timedelta(days=7)  # any sooner and ull just remember ur first answers
+
+
+def relabel_pool(test_labels: list[dict]) -> list[dict]:
+    ## same 50 every time, so quitting halfway and coming back is fine
+    picked = random.Random(RELABEL_SEED).sample(test_labels, min(RELABEL_SIZE, len(test_labels)))
+    return [{"id": r["id"], "text": r["text"]} for r in picked]
+
+
+def days_until_relabel(test_labels: list[dict]) -> int:
+    """0 = good to go, otherwise how many more days to wait since ur last test label"""
+    last = max(datetime.fromisoformat(r["labeled_at"]) for r in test_labels)
+    left = RELABEL_WAIT - (datetime.now() - last)
+    return max(0, left.days + 1) if left > timedelta(0) else 0
