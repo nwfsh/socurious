@@ -222,7 +222,7 @@ __marimo__/
 model_cache/
 
 # Database backups
-*.sql
+backups/
 
 # Frontend
 frontend/node_modules/
