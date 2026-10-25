@@ -11,15 +11,17 @@ This file is meant to change. When you make a new call while labelling, add it t
 | Label | Meaning |
 |---|---|
 | `general` | Anyone can answer it as written. It can mention a group, as long as it's *about* them, not *aimed at* them. |
-| `fixable` | Aimed at a group, but anyone can answer once the address or filter is removed. |
-| `unsalvageable` | Answering needs you to *be* in the group. |
+| `fixable` | Aimed at a group, but it becomes answerable by anyone after removing the address or rewording it, *and it still asks the same thing*. |
+| `unsalvageable` | Answering needs you to *be* in the group. Any rewording that makes it answerable by anyone turns it into a different question. |
 | `unsure` | You can't decide in about 10 seconds. Left out of scoring. |
 
 ## How to decide
 
 1. **Is it aimed at a group?** Aimed means the question addresses or filters who should answer: "Ladies, …", "Men who …", "Nurses of reddit: …", "As a …". Mentioning a group isn't aiming at it. If it isn't aimed → `general`.
-2. **Remove the address or filter. Could a typical partner answer what's left?** If yes → `fixable`.
-3. **If answering needs you to be in the group** (a body, an identity, a nationality, a job, an age) → `unsalvageable`.
+2. **Remove the address, or reword it. Could a typical partner answer it, and is it still the same question?** If yes → `fixable`. Some only need the address deleted ("Ladies, …"); others need rewording ("Men who have felt X, how…" → "Have you ever felt X? How…"). Both are `fixable`.
+3. **If answering needs you to be in the group** (a body, an identity, a nationality, a job, an age), or every rewording changes what's being asked → `unsalvageable`.
+
+**A question can be aimed at a group without addressing it.** If it asks for a group's *own* tastes or experiences, only that group can answer from their own life, so it counts as aimed even with no "Ladies," up front (case 11). Compare case 1: asking *why* a group does something is an opinion anyone can give.
 
 **Label directedness only.** A question can be boring, badly written, gossip or not in English and still be `general`. Quality is a separate problem from this label. Content level is also separate: a sexual question addressed to "Ladies," is still just `fixable` here; SFW/NSFW is handled elsewhere (ADR 011).
 
@@ -39,7 +41,7 @@ Calls marked **open** aren't decided yet. Decide them before labelling, then rem
 | 8 | "Men who have dated assertive women, what was your experience?" | **open** | Lots of people have dated an assertive person, so it could be `fixable`. But it's specifically about women's assertiveness from a man's side, and the rewrite would change its meaning. |
 | 9 | "Women, how do you deal with periods at work?" | **open** | About half of partners could answer it. Does "a typical partner" mean *either* partner, or *any* partner? This call decides a whole class of questions. |
 | 10 | "Dear Women, what do you feel when a guy approaches you or tries to hit on you?" | **open** | "What do you feel when someone tries to hit on you?" works for anyone, so it could be `fixable`. But the gender pairing may be the whole point of the question. |
-| 11 | "What types of lingerie do women find attractive in men?" | **open** | Not addressed to anyone, but it asks about one group's taste. Is it `general` (anyone can give an opinion) or aimed at women? |
+| 11 | "What types of lingerie do women find attractive in men?" | `unsalvageable` | No address, but it asks for women's own taste, so it's aimed at women. Rewording it for anyone ("What lingerie do you find attractive on a partner?") asks a different question. |
 | 12 | "Nurses of reddit: worst shift?" | **open** | Profession-only, so probably `unsalvageable`. Decide whether every job counts the same way. |
 | 13 | "Parents, …" / "As a teacher, …" | **open** | Many partners are parents; few are teachers. Does a common group count differently from a rare one? |
 | 14 | "Anyone else too afraid of drugs to ever want to try?" · "What are your stories…" | `general` | Reddit wording, but not aimed at a group. If it's a bad question, that's a quality problem, not a directedness one. |
@@ -47,3 +49,4 @@ Calls marked **open** aren't decided yet. Decide them before labelling, then rem
 ## Changelog
 
 - 2026-10-24: first version. Cases 1–7 and 14 decided; 8–13 open.
+- 2026-10-24: case 11 → `unsalvageable`. `fixable` now includes questions that need rewording, not just deleting the address, as long as the rewrite asks the same thing. Added the "aimed without addressing" rule.

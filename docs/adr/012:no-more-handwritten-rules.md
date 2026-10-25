@@ -32,7 +32,7 @@ Replace the hand-written directed-question rules with a trained classifier that 
 |---|---|---|
 | `general` | Already askable to anyone | Keep |
 | `fixable` | Directed, but the underlying question is answerable by a typical partner | Send to rewriter |
-| `unsalvageable` | Only answerable by the addressed group | Reject (optionally store for an opt-in group bank later) |
+| `unsalvageable` | Only answerable by the addressed group | Keep out of the general bank; store for group decks (see below) |
 
 **The label is defined by answerability, not address.** The test: after removing the addressee, can a typical partner answer it from their own life? "Ladies, what's a preference…" passes, so it's `fixable`. "Men from Arabic countries…" fails, so it's `unsalvageable`. Who a question is addressed to is a surface feature for the model to learn; answerability is the decision being made.
 
@@ -160,4 +160,5 @@ Three classic models, built by hand:
 ## Open questions
 
 - How large are non-gendered directed questions (profession, age, life experience)? Count before finalizing the labeling sample.
-- Should `unsalvageable` questions be deleted, or stored for an opt-in group bank? Store the label either way; defer the product decision.
+- ~~Should `unsalvageable` questions be deleted, or stored for an opt-in group bank?~~ **Decided 2026-10-24: stored.** Gendered `unsalvageable` questions will feed future "girls' night" and "guys' night" decks. The label doesn't say *which* group a question is for, but that can be tagged later on just the `unsalvageable` set, which is small. Non-gendered groups (jobs, nationalities, ages) don't have a deck yet.
+- Does the primary metric still hold? It assumed an `unsalvageable` question gets thrown away, so a wrong call loses a good question. With group decks, a wrong call instead moves a general question into a gendered deck. That's still a mistake, but a cheaper one. Revisit the precision threshold once the decks exist.

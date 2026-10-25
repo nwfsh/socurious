@@ -33,9 +33,10 @@ the test: take out who it's addressed to. can a typical partner still answer it 
 
   general        anyone can answer it as written. can mention men/women, as long as its ABOUT them not AIMED at them
                  "Why do men fake tender moments?"
-  fixable        aimed at a group, but anyone can answer once u strip the address
+  fixable        aimed at a group, but anyone can answer once u strip the address or reword it,
+                 and its still the same question
                  "Ladies, what makes you buy clothes for your partner?"
-  unsalvageable  only the addressed group can really answer it
+  unsalvageable  only the group can really answer it, any rewording turns it into a different question
                  "Men who are still virgins over the age of 30, why?\""""
 
 ## enriched pool: questions with any of these get oversampled, since directed ones are only ~5% of raw
