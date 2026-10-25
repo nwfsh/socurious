@@ -60,7 +60,7 @@ New pipeline order: format rules → directedness classifier (+ rewriter) → in
 - **Random pool:** an unbiased slice of the raw data, so precision and recall estimates reflect the real mix.
 - **Enriched pool:** questions containing group words (men, women, ladies, guys, "who", "as a"). Directed questions are only ~5% of the raw data, so without this the rare labels get too few examples. It also brings in hard negatives like "Why do men…" and "What do women wish…", so the labels (and later the models) separate structure from "mentions men".
 
-**Labels:** `general`, `fixable`, `unsalvageable`, plus `unsure` for genuine toss-ups. `unsure` questions are left out of scoring and counted separately. They preview what the review queue will look like.
+**Labels:** `general`, `fixable`, `unsalvageable`, plus `unsure` for genuine toss-ups. `unsure` questions are left out of scoring and counted separately. They preview what the review queue will look like. Edge-case calls live in `docs/guidelines/directed-labelling.md`, which changes as labelling goes on; this ADR doesn't.
 
 **Three sets, labeled in this order:**
 

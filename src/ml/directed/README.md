@@ -1,6 +1,7 @@
 # directed-question labeling (ADR 012)
 
 Labels each question `general` / `fixable` / `unsalvageable` (+ `unsure`).
+Edge cases and how to decide: [docs/guidelines/directed-labelling.md](../../../docs/guidelines/directed-labelling.md). Read it before every labelling session.
 The test: take out who it's addressed to. Can a typical partner still answer it from their own life?
 
 This folder only builds and checks the labels. The models (naive bayes, L1 logreg, boosting) aren't here yet.
