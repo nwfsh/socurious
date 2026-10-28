@@ -66,20 +66,24 @@ New pipeline order: format rules → directedness classifier (+ rewriter) → in
 
 | Set | Size | Labeled by | Used for |
 |---|---|---|---|
-| Test | ~100 | Me, blind, no AI help | Final comparison only. Locked. |
-| Train | ~300 | Llama pre-labels, I correct in Label Studio | Training and cross-validation |
-| Relabel | 50, drawn from the test set | Me, blind, again, at least a week later | Self-agreement (Cohen's kappa) |
+| Test | 100 | Me, blind, no AI help | Final comparison only. Locked. |
+| Train | 300 | Me, by hand, same tool and guideline | Training and cross-validation |
+| Relabel | 50, drawn from the test set | Me, blind, again, at least ~a week later | Self-agreement (Cohen's kappa) |
 
 **The test set is labeled first, by hand.** It's the ground truth that the rules, every model and Llama are all scored against, so no model output is visible while labeling it.
 
-**The training set is Llama-assisted.** Llama 3.1 8B (the same local setup as the rewriter) pre-labels ~300 questions, and I accept or correct each one in Label Studio. This is much faster than labeling from scratch. For every question, log Llama's label, my final label, and whether I overrode it.
+**The training set is also hand-labeled** (changed 2026-10-24, see "Alternatives considered"). After 100 test labels the guideline was detailed enough that labeling 300 more by hand takes a few sittings, which is about what correcting Llama would cost once writing and testing a prompt is included. Hand labels also avoid Llama's mistakes surviving my corrections.
 
-**Two measures of label quality:**
+**The training set can grow later.** More questions can be sampled into the train pool and labeled the same way. The test set never grows; it stays these 100 so every score stays comparable.
 
-- **Override rate:** how often I changed Llama's label on the training set. It shows how good the LLM is as a labeler before any model comparison runs.
-- **Kappa:** relabel 50 test questions without seeing the first label, and compute Cohen's kappa against the originals. This is the ceiling on the whole project: no model can be reliably scored as more accurate than my own consistency. Below ~0.7 means the label definitions need tightening before training.
+**Kappa** is the measure of label quality: relabel 50 test questions without seeing the first label, and compute Cohen's kappa against the originals. This is the ceiling on the whole project: no model can be reliably scored as more accurate than my own consistency. Below ~0.7 means the label definitions need tightening before training.
 
-**Anchoring caveat.** Seeing Llama's suggestion pulls me toward agreeing with it (the same reason DeBERTa's guess is hidden in the topic labeler). So the override rate *understates* how often Llama is wrong. To measure that honestly, Llama also labels the test set, and I never see those labels. Its accuracy against my blind labels, compared with the override rate, shows how big the anchoring effect is. If the same prompt is used, that blind score also serves as the zero-shot LLM's result in the follow-up comparison.
+**Llama is scored later, on the test set only.** Its accuracy against my blind labels shows how good an LLM labeler is, and becomes the prompted-LLM contender's result in the follow-up comparison. Two rules for its prompt:
+
+- **No test questions in the prompt.** Guideline cases 15–24 came from the test set, so they can't be used as examples.
+- **Don't tune the prompt against the test set.** Improve it on a small hand-labeled slice of the train pool, freeze it, then run it once on the test set.
+
+The guideline rules were written while labeling the test set, so they carry a little of what was seen there. That applies equally to me and to any prompt built from the guideline, so it's accepted as a known limitation.
 
 ### Step 2: Score the current rules
 
@@ -118,7 +122,7 @@ Three classic models, built by hand:
 
 **Primary metric:** precision on `unsalvageable`. Wrongly rejecting a good question is the costly error (same reasoning as ADR 004). The decision threshold for that class is tuned upward from the default 0.5 using a precision–recall curve. Low-confidence predictions go to a review queue, not the reject pile.
 
-**What happens next:** the best of the three advances as the "classic" contender in a follow-up comparison against a fine-tuned encoder and a zero-shot LLM, scored on the locked test set. That comparison gets its own ADR.
+**What happens next:** the best of the three advances as the "classic" contender in a follow-up comparison against a fine-tuned encoder and a prompted LLM (Llama, few-shot), scored on the locked test set. That comparison gets its own ADR.
 
 ### Rewriter (fixable route only)
 
@@ -137,9 +141,9 @@ Three classic models, built by hand:
 
 **Bake off all seven classic models** (adding linear SVM, a shallow decision tree, and a RIPPER rule learner). Rejected for now. With a few hundred labels, models reading the same features will land within noise of each other. Each extra model also duplicates one already in the set: SVM behaves like logistic regression, the shallow tree is a weaker boosting, and L1 already provides the readable-rules benefit of RIPPER. Revisit only if a classic model ends up close to the encoder and LLM in the follow-up comparison.
 
-**Hand-label everything without Llama.** Rejected. Labeling ~400 questions from scratch is slow, and the blind test set already provides clean ground truth. Llama assistance only touches training data, where small label noise costs less.
+**Llama pre-labels the training set, I correct it in Label Studio.** The original plan; dropped 2026-10-24 before it ran. It would have produced an override rate and an "anchoring gap" (how much seeing Llama's label pulls me toward it), but it needed a tested prompt, Ollama, Label Studio and an import step, which saved little time over hand-labeling 300. Llama's mistakes could also survive my corrections. Llama's blind test-set score still answers how good an LLM labeler is.
 
-**Let Llama label everything, including the test set.** Rejected. Llama would then be grading the models against its own opinions, and the zero-shot LLM contender would be scored against itself.
+**Let Llama label everything, including the test set.** Rejected. Llama would then be grading the models against its own opinions, and the prompted-LLM contender would be scored against itself.
 
 **Go straight to a fine-tuned encoder or LLM.** Rejected as a *first* step. Without a classic baseline, there's no way to tell whether the heavier model's accuracy is worth its cost.
 
@@ -153,7 +157,6 @@ Three classic models, built by hand:
 
 **Negative:**
 - Labeling ~400 questions is real upfront cost, and label consistency caps accuracy more than model choice does.
-- Training labels start as Llama's, so its systematic mistakes can survive my corrections. The blind test set and the anchoring check are what catch this.
 - `unsalvageable` will be the smallest class, and the ~100-question test set may hold only a handful of them. Its precision will be noisy, so report the raw counts alongside the percentage.
 - The rewriter adds an LLM dependency and a validation step to the pipeline.
 
