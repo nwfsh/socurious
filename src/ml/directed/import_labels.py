@@ -13,7 +13,13 @@ from src.ml.directed.common import LLAMA_TRAIN_PATH, TRAIN_PATH, read_jsonl, wri
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("export", help="label studio JSON export")
+    parser.add_argument("--force", action="store_true", help="overwrite train.jsonl even if it has hand labels")
     args = parser.parse_args()
+
+    ## train is hand-labeled now (ADR 012), dont let an old label studio export wipe that out
+    if read_jsonl(TRAIN_PATH) and not args.force:
+        print(f"{TRAIN_PATH} already has labels (probably ur hand labels from app.py), pass --force to overwrite them")
+        return
 
     llama = {r["id"]: r["llama"] for r in read_jsonl(LLAMA_TRAIN_PATH)}
     with open(args.export) as f:

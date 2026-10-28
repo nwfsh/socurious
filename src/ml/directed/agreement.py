@@ -56,10 +56,10 @@ def llama_blind():
 
 
 def override_rate():
-    rows = [r for r in read_jsonl(TRAIN_PATH) if r["label"] != UNSURE]
+    rows = [r for r in read_jsonl(TRAIN_PATH) if r["label"] != UNSURE and "overridden" in r]
     print("\n== overrides on train (llama visible) ==")
     if not rows:
-        print("no train labels yet, run python3 -m src.ml.directed.import_labels <export.json>")
+        print("no llama-assisted train labels (train is hand-labeled now, ADR 012), skipping")
         return None
     overridden = sum(r["overridden"] for r in rows)
     print(f"u changed llama's label on {overridden}/{len(rows)} = {overridden / len(rows):.0%}")

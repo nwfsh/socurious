@@ -1,6 +1,7 @@
 ## streamlit version of label.py, same files, so u can mix terminal and browser freely
 ##
 ## test mode:    blind-label the test pool. nothing from llama or the old rules is shown (anchoring bias)
+## train mode:   hand-label the train pool, same rules. this is what the models learn from
 ## relabel mode: a week+ later, label 50 test questions again without seeing ur first answer, for kappa
 ##
 ## usage: streamlit run src/ml/directed/app.py
@@ -14,21 +15,24 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # streamlit only p
 import streamlit as st
 
 from src.ml.directed.common import (
-    TEST_POOL_PATH, TEST_PATH, RELABEL_PATH, LABELS, UNSURE, DEFINITIONS,
+    TEST_POOL_PATH, TEST_PATH, TRAIN_POOL_PATH, TRAIN_PATH, RELABEL_PATH, LABELS, UNSURE, DEFINITIONS,
     relabel_pool, days_until_relabel, read_jsonl, write_jsonl, append_jsonl,
 )
 
 st.set_page_config(page_title="socurious directed labels", layout="centered")
+
+POOLS = {"test": TEST_POOL_PATH, "train": TRAIN_POOL_PATH}
+OUT_PATHS = {"test": TEST_PATH, "train": TRAIN_PATH, "relabel": RELABEL_PATH}
 
 BUTTONS = [(LABELS[0], "general"), (LABELS[1], "fixable"), (LABELS[2], "unsalvageable"), (UNSURE, "unsure")]
 
 
 def get_pool(mode):
     """the questions to label in this mode, or None if theres nothing to do yet"""
-    if mode == "test":
-        pool = read_jsonl(TEST_POOL_PATH)
+    if mode in POOLS:
+        pool = read_jsonl(POOLS[mode])
         if not pool:
-            st.warning("no test pool found, run `python3 -m src.ml.directed.sample` first")
+            st.warning(f"no {mode} pool found, run `python3 -m src.ml.directed.sample` first")
             return None
         return pool
 
@@ -43,7 +47,7 @@ def get_pool(mode):
 
 
 def label_view(mode):
-    out_path = TEST_PATH if mode == "test" else RELABEL_PATH
+    out_path = OUT_PATHS[mode]
     pool = get_pool(mode)
     if pool is None:
         return
@@ -103,8 +107,8 @@ def undo_button(labels, out_path):
 
 
 mode = st.sidebar.radio(
-    "mode", ["test", "relabel"],
-    format_func=lambda m: {"test": "test (blind)", "relabel": "relabel (for kappa)"}[m],
+    "mode", ["train", "test", "relabel"],
+    format_func=lambda m: {"train": "train", "test": "test (blind)", "relabel": "relabel (for kappa)"}[m],
 )
 with st.sidebar.expander("label definitions", expanded=True):
     st.code(DEFINITIONS, language=None, wrap_lines=True)
