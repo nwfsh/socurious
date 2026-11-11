@@ -82,7 +82,7 @@ New pipeline order: format rules → directedness classifier (+ rewriter) → in
 
 | Change | Count | Boundary |
 |---|---|---|
-| `fixable` → `general` | 6 | Mostly "about a group" vs "aimed at a group" ("Do a lot of men use toys?", casual "you guys"). Here the first labels over-called `fixable`. |
+| `fixable` → `general` | 6 | "About a group" vs "aimed at a group" ("Do a lot of men use toys?"), and casual "you guys". The first labels over-called `fixable` on the "about" questions. The "guys" questions were settled by a decision instead: "guys" is gendered language (see guideline), so those keep `fixable`. |
 | `unsalvageable` → `fixable` | 3 | Gender built into the question vs just who's being asked (the bathroom, glow-up and "princess treatment" questions). |
 | `fixable` → `unsalvageable` | 1 | A preference filter ("For those who don't want children…"). |
 

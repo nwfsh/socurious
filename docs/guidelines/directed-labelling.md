@@ -33,6 +33,10 @@ Most aimed questions come down to what the filter is:
 
 ## Rules
 
+**About a group vs aimed at a group: who is the question asking?** Ask whether the question wants *your own* experience or taste ("what's it like for you", "what do you…", "your…"), or asks *about* a group ("Do a lot of men…", "Is it frowned upon if a man…", "Why do women…"). Only the first is aimed. Mentioning men, even in every word, doesn't make a question aimed at men (cases 1, 25, 26). This was the most common slip in the kappa check: test questions had been labelled `fixable` when they only talked *about* men.
+
+**"Guys" is gendered language.** When "guys" is used to address people ("you guys", "Guys, …", "Let's be honest guys"), it addresses men, so the question is aimed → at least `fixable` (cases 2, 27). This is a deliberate choice: casual "guys" isn't treated as gender-neutral. When "guys" is a noun *about* a group ("Do guys piss during…", "special forces guys"), use the about-vs-aimed check instead; it's usually `general`.
+
 **A question can be aimed at a group without addressing it.** If it asks for a group's *own* tastes or experiences, only that group can answer from their own life, so it counts as aimed even with no "Ladies," up front (case 11). Compare case 1: asking *why* a group does something is an opinion anyone can give.
 
 **Is the gender built into the question, or just who's being asked?** If the gender is just who's being asked, removing it leaves the question intact → `fixable` (cases 8, 10). If the gender is built into the question, removing it removes the point → `unsalvageable` (case 15).
@@ -51,10 +55,12 @@ Most aimed questions come down to what the filter is:
 
 ## Edge cases
 
+Cases marked **(T)** are test-set questions. That's fine for you, but **never use them as examples in a Llama prompt** (ADR 012), and keep this table closed while relabelling.
+
 | # | Example | Call | Why |
 |---|---|---|---|
 | 1 | "Why do men fake tender moments?" · "Who has an easier life, men or women?" | `general` | About a group, not aimed at one. Anyone can give an opinion. |
-| 2 | "Which AI do you guys use the most?" | `general` | Casual "you guys" means everyone, not men. |
+| 2 | "Which AI do you guys use the most?" | `fixable` | "You guys" is gendered language, so it addresses men. Removing it leaves a question anyone can answer. (Changed from `general`, 2026-11-10.) |
 | 3 | "Ladies, what makes you buy clothes for your partner?" | `fixable` | Plain address. Removing "Ladies," leaves a question anyone can answer. |
 | 4 | "Men who have felt unvalued by someone they deeply loved: how did you handle it?" | `fixable` | The filter is a common experience, not an identity. Can be rewritten as "Have you ever felt unvalued by…". |
 | 5 | "Men who are still virgins over the age of 30, why?" | `unsalvageable` | Needs you to be in a narrow group. |
@@ -67,16 +73,28 @@ Most aimed questions come down to what the filter is:
 | 12 | "Nurses of reddit: worst shift?" | `unsalvageable` | Needs a specific job. Every profession counts the same way. |
 | 13 | "Parents, …" / "As a teacher, …" | `unsalvageable` | Needs you to be in the group, whether it's a common one (parents) or a rare one (teachers). |
 | 14 | "Anyone else too afraid of drugs to ever want to try?" · "What are your stories…" | `general` | Reddit wording, but not aimed at a group. If it's a bad question, that's a quality problem, not a directedness one. |
-| 15 | "When you're hanging out with just your male friends, do you feel the need to close the door when using the bathroom?" | `unsalvageable` | Gender is built into the question. It's asking whether guys drop privacy around other guys; without "male" that's gone. Guys' night deck. |
-| 16 | "Women who have curly hair and don't like it, how do you deal with it?" | `unsalvageable` | The gender can come out, but curly hair is still a trait not everyone has. Deck tag: other, not girls' night. |
-| 17 | "Pretty women who used to be ugly, how do you feel about it?" | `unsalvageable` | The gender can come out, but "used to be ugly, now pretty" is a trait you have to see in yourself. "Had a glow-up" softens it into a different question. |
-| 18 | "If you're an extrovert, how did you find your introverted wife?" | `unsalvageable` | "Wife" → "partner" is fine, but it stacks two filters: you're an extrovert *and* your partner is an introvert. |
-| 19 | "If you study Spanish, what is your motivation behind it?" | `unsalvageable` | A rare activity. Making it answerable means changing "Spanish" to "a language", which is a different question. |
-| 20 | "What has your pet accidentally trained you to do without you even realizing it?" | `general` | No filter. It assumes a common situation; most people have had a pet at some point. |
-| 21 | "People who have an evil family member, how do you deal with them?" | `fixable` | A common experience. "Is there a family member you really can't stand? How do you deal with them?" is the same situation, less exaggerated. |
-| 22 | "How to get those Crazy Eyebrows under control?" | `general` | Assumes something about the asker, not the answerer. It's a how-to request, which is a quality problem (parked below). |
-| 23 | "People who like living in small towns over big cities, why?" | `fixable` | The filter is a preference; everyone has one. "Would you rather live in a small town or a big city, and why?" |
-| 24 | "What was it like going out with a woman taller than you?" | `fixable` | Aimed without addressing (asks your own dating experience). The point is the height difference, not the gender, and it's a common experience. |
+| 15 (T) | "When you're hanging out with just your male friends, do you feel the need to close the door when using the bathroom?" | `unsalvageable` | Gender is built into the question. It's asking whether guys drop privacy around other guys; without "male" that's gone. Guys' night deck. |
+| 16 (T) | "Women who have curly hair and don't like it, how do you deal with it?" | `unsalvageable` | The gender can come out, but curly hair is still a trait not everyone has. Deck tag: other, not girls' night. |
+| 17 (T) | "Pretty women who used to be ugly, how do you feel about it?" | `unsalvageable` | The gender can come out, but "used to be ugly, now pretty" is a trait you have to see in yourself. "Had a glow-up" softens it into a different question. |
+| 18 (T) | "If you're an extrovert, how did you find your introverted wife?" | `unsalvageable` | "Wife" → "partner" is fine, but it stacks two filters: you're an extrovert *and* your partner is an introvert. |
+| 19 (T) | "If you study Spanish, what is your motivation behind it?" | `unsalvageable` | A rare activity. Making it answerable means changing "Spanish" to "a language", which is a different question. |
+| 20 (T) | "What has your pet accidentally trained you to do without you even realizing it?" | `general` | No filter. It assumes a common situation; most people have had a pet at some point. |
+| 21 (T) | "People who have an evil family member, how do you deal with them?" | `fixable` | A common experience. "Is there a family member you really can't stand? How do you deal with them?" is the same situation, less exaggerated. |
+| 22 (T) | "How to get those Crazy Eyebrows under control?" | `general` | Assumes something about the asker, not the answerer. It's a how-to request, which is a quality problem (parked below). |
+| 23 (T) | "People who like living in small towns over big cities, why?" | `fixable` | The filter is a preference; everyone has one. "Would you rather live in a small town or a big city, and why?" |
+| 24 (T) | "What was it like going out with a woman taller than you?" | `fixable` | Aimed without addressing (asks your own dating experience). The point is the height difference, not the gender, and it's a common experience. |
+| 25 (T) | "Do a lot of men use toys?" | `general` | Asks *about* men, not men's own experience. Anyone can have an opinion. (Adjudicated from `fixable`, 2026-11-10.) |
+| 26 (T) | "Is it frowned upon if a man has a praise & humiliation kink?" | `general` | An opinion about men, not aimed at them. (Adjudicated from `fixable`.) |
+| 27 (T) | "How do you guys know if you are healthy?" · "Let's be honest guys, what's the dumbest thing you've done because of "the urge"?" · "What do you guys think of UK wanting to split up?" · "Guys idk but is overthinking…" | `fixable` | "Guys" as an address is gendered language. Strip it and anyone can answer. |
+| 28 (T) | "What does being mature actually mean to you as a man?" | `fixable` | "As a man" is a filter, so it's aimed (not `general`). "What does being mature mean to you?" keeps the question. |
+| 29 (T) | "Men, what's something you consider "princess treatment" that women would consider the bare minimum?" | `unsalvageable` | Gender is built in: it's about the gap between men's and women's expectations. Guys' night deck. |
+| 30 (T) | "For those who don't want children, what made you realize parenthood wasn't for you?" | `fixable` | The filter is a preference. "Do you want kids someday? What made you feel that way?" |
+| 31 (T) | "Ladies, do you wear it once and take it back?" | `fixable` | Plain address; returning clothes isn't gendered. The vague "it" is a quality problem (parked). |
+| 32 (T) | "How would you be able to afford insurance working part time but not being able to be on your parents plan?" | `general` | Not aimed; the situation is the asker's. An advice request (parked). |
+| 33 | "Men, what's it like to open up to your woman only for her to ignore you or act as if what you're sharing is insignificant?" | `fixable` | Both layers pass: "Men," is only who's asked, and being dismissed by a partner is a common experience. "What's it like to open up to your partner, only for them to ignore you?" |
+| 34 | "Men who became "ready" after ending a long-term relationship: did you ever feel guilty?" | `unsalvageable` | The gender can come out, but the experience is a specific two-part one (ended a long relationship, *then* became ready). |
+| 35 | "Does any tall man here have a much taller mom, like at least 4" shorter than his mom?" | `unsalvageable` | Two trait filters stacked: tall man, and a mum taller than you. |
+| 36 | "Notting Hill carnival. Man jumped in a canal… What exactly happened?" · "What happens to all of the graduates from community college game development programs?" | `general` | Not aimed. Factual or news questions, a quality problem (parked). |
 
 ## Parked: not a directedness problem
 
@@ -84,6 +102,9 @@ Questions with a quality problem, collected for a possible later filter or model
 
 - "How to get those Crazy Eyebrows under control?": a how-to / advice request. Maybe a layer 1 rule ("How to …").
 - "Pretty women who used to be ugly, how do you feel about it?": insulting framing ("ugly").
+- "Ladies, do you wear it once and take it back?": vague "it" that refers to something missing from the title.
+- "How would you be able to afford insurance working part time…": an advice request, and US-specific.
+- "Notting Hill carnival… What exactly happened?" · "What happens to all of the graduates from community college game development programs?": factual or news questions, not conversation questions.
 
 ## Changelog
 
@@ -91,3 +112,5 @@ Questions with a quality problem, collected for a possible later filter or model
 - 2026-10-24: case 11 → `unsalvageable`. `fixable` now includes questions that need rewording, not just deleting the address, as long as the rewrite asks the same thing. Added the "aimed without addressing" rule.
 - 2026-10-24: decided 8, 9, 10, 12, 13; replaced their reasons. Case 14 confirmed `general`.
 - 2026-10-24 (during test labelling): added the filter-type table, the rules section (gender built in, removing the gender isn't the end, stacked filters, reword limits, assuming vs aiming, asker vs answerer), cases 15–24, "If you…" as a filter form, and the parked list.
+- 2026-11-10 (after kappa 0.68): added the "about vs aimed" check and the casual "guys" rule, cases 25–36, marked test-set cases with (T), and added three parked categories (vague "it", advice requests, factual/news questions). Test labels for cases 25–26 adjudicated to `general`.
+- 2026-11-10: "guys" is gendered language. Used as an address it means the question is aimed at men (at least `fixable`); as a noun about a group, it goes through the about-vs-aimed check. Case 2 → `fixable`. Case 27 → `fixable`: two test labels back to their original `fixable`, two adjudicated from `general`.

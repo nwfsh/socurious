@@ -18,7 +18,7 @@
 {"id": 7489, "text": "Pretty women who used to be ugly, how do you feel about it?", "label": "unsalvageable", "labeled_at": "2026-10-24T22:18:03.819690", "pool": "enriched"}
 {"id": 4175, "text": "People who catfished someone else - what\u2019s your story?", "label": "unsalvageable", "labeled_at": "2026-10-24T22:18:06.209702", "pool": "random"}
 {"id": 7012, "text": "When you're walking on a tiled floor, do you prefer to walk on the tiles or on the lines between the tiles?", "label": "general", "labeled_at": "2026-10-24T22:18:12.979035", "pool": "enriched"}
-{"id": 9754, "text": "Is it frowned upon if a man has a praise & humiliation kink?", "label": "fixable", "labeled_at": "2026-10-24T22:18:18.399102", "pool": "enriched"}
+{"id": 9754, "text": "Is it frowned upon if a man has a praise & humiliation kink?", "label": "general", "labeled_at": "2026-10-24T22:18:18.399102", "pool": "enriched", "adjudicated_from": "fixable"}
 {"id": 9979, "text": "Who's the best F1 Driver of all times?", "label": "general", "labeled_at": "2026-10-24T22:18:24.283029", "pool": "random"}
 {"id": 6655, "text": "So if you are gay, why?", "label": "unsalvageable", "labeled_at": "2026-10-24T22:18:26.935557", "pool": "enriched"}
 {"id": 8559, "text": "Dont \"Trigger warnings\" trigger people whi coukd be triggered with the content?", "label": "general", "labeled_at": "2026-10-24T22:18:44.205661", "pool": "random"}
@@ -30,7 +30,7 @@
 {"id": 6141, "text": "If feminism was to have next huge wave, what problems would be focused upon?", "label": "general", "labeled_at": "2026-10-24T22:20:33.055321", "pool": "random"}
 {"id": 6735, "text": "How do you respond to a man (you don't know) who tries to start a conversation politely?", "label": "fixable", "labeled_at": "2026-10-24T22:20:42.407109", "pool": "enriched"}
 {"id": 4227, "text": "Is breaking up over text actually that horrible?", "label": "general", "labeled_at": "2026-10-24T22:20:44.926597", "pool": "random"}
-{"id": 2898, "text": "Guys idk but is overthinking has disastrous consequences like in the future?", "label": "general", "labeled_at": "2026-10-24T22:20:57.127797", "pool": "enriched"}
+{"id": 2898, "text": "Guys idk but is overthinking has disastrous consequences like in the future?", "label": "fixable", "labeled_at": "2026-10-24T22:20:57.127797", "pool": "enriched", "adjudicated_from": "general"}
 {"id": 6698, "text": "What has your pet accidentally trained you to do without you even realizing it?", "label": "general", "labeled_at": "2026-10-24T22:21:54.959888", "pool": "random"}
 {"id": 6176, "text": "Do women like to cheat as much as men do?", "label": "general", "labeled_at": "2026-10-24T22:21:58.904388", "pool": "random"}
 {"id": 6784, "text": "Is there anything except heat that makes fire so painful/cause injuries?", "label": "general", "labeled_at": "2026-10-24T22:22:01.534694", "pool": "random"}
@@ -55,7 +55,7 @@
 {"id": 5024, "text": "Guys, can you actually control your boner or not?", "label": "unsalvageable", "labeled_at": "2026-10-24T22:24:33.883474", "pool": "enriched"}
 {"id": 8273, "text": "This is a question for well traveled black people or black people who moved abroad. If you have experienced racism out side of the US how different was it?", "label": "unsalvageable", "labeled_at": "2026-10-24T22:24:38.474859", "pool": "enriched"}
 {"id": 4229, "text": "What is the worst zodiac sign in your opinion?", "label": "general", "labeled_at": "2026-10-24T22:24:40.404442", "pool": "random"}
-{"id": 4855, "text": "What do you guys think of UK wanting to split up?", "label": "general", "labeled_at": "2026-10-24T22:24:53.715927", "pool": "enriched"}
+{"id": 4855, "text": "What do you guys think of UK wanting to split up?", "label": "fixable", "labeled_at": "2026-10-24T22:24:53.715927", "pool": "enriched", "adjudicated_from": "general"}
 {"id": 4534, "text": "Why do some American high fantasy franchises like He-Man, or the priests and knights in many American MMO video games have crosses, even though they take place in fictional worlds where Christianity don't exist?", "label": "general", "labeled_at": "2026-10-24T22:25:03.411436", "pool": "enriched"}
 {"id": 5661, "text": "What\u2019s the funniest, craziest, or scariest thing you\u2019ve ever seen while driving?", "label": "general", "labeled_at": "2026-10-24T22:25:05.093165", "pool": "enriched"}
 {"id": 456, "text": "What are examples of not being a girls girl?", "label": "general", "labeled_at": "2026-10-24T22:25:11.073543", "pool": "enriched"}
@@ -87,7 +87,7 @@
 {"id": 6627, "text": "What do elite special forces (like SAS, Delta, etc.) guys do day-to-day when they don't have any actual ops to run?", "label": "general", "labeled_at": "2026-10-24T22:28:50.901664", "pool": "enriched"}
 {"id": 10398, "text": "If you see someone getting harassed, would you try to protect them or call the police?", "label": "general", "labeled_at": "2026-10-24T22:28:54.911742", "pool": "random"}
 {"id": 8824, "text": "What does being mature actually mean to you as a man?", "label": "fixable", "labeled_at": "2026-10-24T22:28:58.718479", "pool": "enriched"}
-{"id": 7960, "text": "Do a lot of men use toys?", "label": "fixable", "labeled_at": "2026-10-24T22:29:04.148534", "pool": "enriched"}
+{"id": 7960, "text": "Do a lot of men use toys?", "label": "general", "labeled_at": "2026-10-24T22:29:04.148534", "pool": "enriched", "adjudicated_from": "fixable"}
 {"id": 10454, "text": "How do you guys know if you are healthy?", "label": "fixable", "labeled_at": "2026-10-24T22:29:13.230666", "pool": "enriched"}
 {"id": 5078, "text": "Men who have been to jail: what was the whole process like for you?", "label": "unsalvageable", "labeled_at": "2026-10-24T22:29:17.423504", "pool": "enriched"}
 {"id": 5074, "text": "What arethe best 10/10 mangas/novels to read?", "label": "general", "labeled_at": "2026-10-24T22:29:20.105688", "pool": "random"}
