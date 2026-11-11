@@ -1,4 +1,4 @@
-## step 3: llama pre-labels BOTH pools, locally through ollama
+z## step 3: llama pre-labels BOTH pools, locally through ollama
 ##   train -> llama_train.jsonl + label_studio_import.json (u see these, then correct them)
 ##   test  -> llama_test.jsonl (u NEVER see these, its how we measure llama honestly, see agreement.py)
 ## run this AFTER ur done blind-labeling the test pool, so theres no way to peek
