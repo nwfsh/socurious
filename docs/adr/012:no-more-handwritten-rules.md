@@ -78,6 +78,16 @@ New pipeline order: format rules → directedness classifier (+ rewriter) → in
 
 **Kappa** is the measure of label quality: relabel 50 test questions without seeing the first label, and compute Cohen's kappa against the originals. This is the ceiling on the whole project: no model can be reliably scored as more accurate than my own consistency. Below ~0.7 means the label definitions need tightening before training.
 
+**Kappa result (2026-11-10): 0.68**, 40 of 50 identical, relabelled 17 days after the test labels. This is the raw number, recorded before any test labels were corrected. The 10 disagreements fell on two boundaries:
+
+| Change | Count | Boundary |
+|---|---|---|
+| `fixable` → `general` | 6 | Mostly "about a group" vs "aimed at a group" ("Do a lot of men use toys?", casual "you guys"). Here the first labels over-called `fixable`. |
+| `unsalvageable` → `fixable` | 3 | Gender built into the question vs just who's being asked (the bathroom, glow-up and "princess treatment" questions). |
+| `fixable` → `unsalvageable` | 1 | A preference filter ("For those who don't want children…"). |
+
+Response: the 10 test labels are adjudicated against the written guideline (corrected to what the rules say, not to any model's output; no model had been scored yet), and the guideline gets a sharper check for "about vs aimed". The uncorrected labels stay in git history. Models are scored against the adjudicated labels; 0.68 stays the reported measure of my own consistency.
+
 **Llama is scored later, on the test set only.** Its accuracy against my blind labels shows how good an LLM labeler is, and becomes the prompted-LLM contender's result in the follow-up comparison. Two rules for its prompt:
 
 - **No test questions in the prompt.** Guideline cases 15–24 came from the test set, so they can't be used as examples.
