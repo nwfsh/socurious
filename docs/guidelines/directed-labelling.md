@@ -95,12 +95,15 @@ Cases marked **(T)** are test-set questions. That's fine for you, but **never us
 | 34 | "Men who became "ready" after ending a long-term relationship: did you ever feel guilty?" | `unsalvageable` | The gender can come out, but the experience is a specific two-part one (ended a long relationship, *then* became ready). |
 | 35 | "Does any tall man here have a much taller mom, like at least 4" shorter than his mom?" | `unsalvageable` | Two trait filters stacked: tall man, and a mum taller than you. |
 | 36 | "Notting Hill carnival. Man jumped in a canal… What exactly happened?" · "What happens to all of the graduates from community college game development programs?" | `general` | Not aimed. Factual or news questions, a quality problem (parked). |
+| 37 | "Men, is opening up to Women actually that bad?" | `unsalvageable` | Gender is built in: it's about the belief that men shouldn't be vulnerable with women. Compare 33, which asks about an *experience* (being dismissed) anyone can have. Guys' night deck. |
+| 38 | "How to stop thinking about sex as a man?" | `fixable` | "As a [group]" in a how-to reads as asking other men how *they* do it ("Men, how do you…?"), so it's aimed. Compare 22 (eyebrows): no group, so it's the asker's own problem → `general`. The how-to wording is still parked as a quality problem. |
 
 ## Parked: not a directedness problem
 
 Questions with a quality problem, collected for a possible later filter or model (maybe ADR 013). Don't let these change the directedness label.
 
 - "How to get those Crazy Eyebrows under control?": a how-to / advice request. Maybe a layer 1 rule ("How to …").
+- "How to stop thinking about sex as a man?": how-to request (label is still `fixable`, see case 38).
 - "Pretty women who used to be ugly, how do you feel about it?": insulting framing ("ugly").
 - "Ladies, do you wear it once and take it back?": vague "it" that refers to something missing from the title.
 - "How would you be able to afford insurance working part time…": an advice request, and US-specific.
@@ -114,3 +117,4 @@ Questions with a quality problem, collected for a possible later filter or model
 - 2026-10-24 (during test labelling): added the filter-type table, the rules section (gender built in, removing the gender isn't the end, stacked filters, reword limits, assuming vs aiming, asker vs answerer), cases 15–24, "If you…" as a filter form, and the parked list.
 - 2026-11-10 (after kappa 0.68): added the "about vs aimed" check and the casual "guys" rule, cases 25–36, marked test-set cases with (T), and added three parked categories (vague "it", advice requests, factual/news questions). Test labels for cases 25–26 adjudicated to `general`.
 - 2026-11-10: "guys" is gendered language. Used as an address it means the question is aimed at men (at least `fixable`); as a noun about a group, it goes through the about-vs-aimed check. Case 2 → `fixable`. Case 27 → `fixable`: two test labels back to their original `fixable`, two adjudicated from `general`.
+- 2026-11-10: cases 37–38. "How to … as a [group]" counts as aimed (asks that group how they do it) → `fixable`.
