@@ -6,6 +6,37 @@ The test: take out who it's addressed to. Can a typical partner still answer it 
 
 This folder only builds and checks the labels. The models (naive bayes, L1 logreg, boosting) aren't here yet.
 
+## map
+
+```mermaid
+flowchart TD
+    raw[(raw_questions)] --> sample[sample.py<br/>format rules + random/enriched pools]
+    sample --> testpool[test_pool.jsonl<br/>100]
+    sample --> trainpool[train_pool.jsonl<br/>300]
+
+    testpool --> label[label.py / app.py<br/>hand labelling]
+    trainpool --> label
+    label --> test[test.jsonl<br/>blind labels, locked]
+    label --> relabel[relabel.jsonl<br/>50 again, for kappa]
+    label --> train[train.jsonl<br/>what the models learn from]
+
+    test --> agreement[agreement.py<br/>kappa + llama accuracy]
+    relabel --> agreement
+
+    train -.-> models[models, not built yet<br/>NB, logreg, trees]
+    test -.->|final check, once| models
+
+    testpool -.-> prelabel[prelabel.py<br/>llama, optional]
+    prelabel -.-> llamatest[llama_test.jsonl<br/>dont open]
+    llamatest -.-> agreement
+
+    common[common.py<br/>paths, labels, definitions] -.- sample
+    common -.- label
+    guide[docs/guidelines/directed-labelling.md] -.- label
+```
+
+Solid = done, dashed = later or optional.
+
 ## order matters
 
 | # | command | what it does |
