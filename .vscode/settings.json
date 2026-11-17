@@ -1,3 +1,20 @@
 {
-    "explorer.sortOrder": "modified"
+    "explorer.sortOrder": "modified",
+    "files.exclude": {
+        "venv": true,
+        "model_cache": true,
+        "models": true,
+        "**/__pycache__": true,
+        "**/__init__.py": true,
+        "**/node_modules": true,
+        "**/package-lock.json": true,
+        "**/tsconfig*.json": true,
+        "frontend/@": true,
+        "frontend/components.json": true,
+        "LICENSE": true,
+        ".order": true,
+        "**/requirements*.txt": true,
+        "backups": true,
+        "migrations": true
+    }
 }
