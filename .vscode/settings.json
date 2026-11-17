@@ -1,5 +1,6 @@
 {
     "explorer.sortOrder": "modified",
+    "jupyter.notebookFileRoot": "${workspaceFolder}",
     "files.exclude": {
         "venv": true,
         "model_cache": true,
