@@ -1,0 +1,60 @@
+DIRECTED ML PROGRESS (ADR 012)
+general / fixable / unsalvageable classifier, replaces the directed regex rules
+run everything from the repo root with the venv on
+
+== WHAT TO RUN, IN ORDER ==
+
+done  1. python3 -m src.ml.directed.sample            split raw into test_pool (100) + train_pool (300). run once, never again
+done  2. python3 -m src.ml.directed.label             blind label the 100 test questions -> test.jsonl (LOCKED)
+done  3. streamlit run src/ml/directed/app.py          train mode, label 300 train questions -> train.jsonl
+done  4. python3 -m src.ml.directed.label --relabel   relabel 50 test questions a week+ later -> relabel.jsonl
+done  5. python3 -m src.ml.directed.agreement         kappa = 0.68 (2026-11-10), then adjudicated the 10 disagreements
+done  6. notebooks/result.ipynb                       scores the old rules (score_rules.py) on test, directed vs general
+done  7. python3 -m src.ml.directed.nb                naive bayes + dummy baseline, 5-fold cv on train, saves models/directed_nb.joblib
+todo  8. L1 logreg                                    same features.py + same CV folds as nb.py
+todo  9. boosting                                     same again
+todo 10. pick the best classic model, score it ONCE on test.jsonl vs rules + dummy
+later    python3 -m src.ml.directed.prelabel          llama on test, for the follow-up comparison. freeze the prompt on train first
+
+== FILES ==
+
+src/ml/directed/common.py     paths, labels, definitions
+src/ml/directed/features.py   shared features: word 1-3 grams + START_<firstword> + SHAPE_early_comma + SHAPE_group_who
+src/ml/directed/nb.py         naive bayes
+src/ml/directed/score_rules.py  old regex rules as a baseline
+data/directed/train.jsonl     300 hand labels, train + cv only
+data/directed/test.jsonl      100 hand labels, LOCKED, final check only
+
+== DATA ==
+
+train: 203 general, 32 fixable, 65 unsalvageable
+test:   56 general, 21 fixable, 23 unsalvageable
+total labelled: 400 out of ~12,000 questions
+
+== RESULTS SO FAR (5-fold cv on train, NOT test) ==
+
+                 precision  recall
+dummy            never predicts directed, 0 recall on fixable + unsalvageable
+nb general         0.84      0.94
+nb fixable         0.38      0.09    <- basically never finds fixable
+nb unsalvageable   0.69      0.68
+nb directed vs general  0.83 precision, 0.62 recall
+
+nb settings: alpha=1.0, fit_prior on, raw counts, min_df=2. none tuned yet
+tuning ideas: alpha 0.1-0.5, fit_prior off, binary=True. use GridSearchCV on the same CV, train only
+
+== IS 400 LABELS ENOUGH? (2026-11-25) ==
+
+learning curve for nb (cv macro f1 by training size):
+  48 -> 0.50, 96 -> 0.55, 144 -> 0.58, 192 -> 0.54, 240 -> 0.57
+fixable recall jumps around 0.03-0.25, theres too few fixable rows for it to settle
+
+read: not clearly plateaued, mostly just noisy. the real problem is fixable,
+only ~26 fixable rows per training fold. more general labels wont help much
+
+plan: label more train, but targeted, not random
+  - sample new questions from the ENRICHED pool (group words), thats where fixable lives
+  - better: label the ones nb is least sure about (active learning)
+  - aim for ~100 fixable in train, roughly +200-300 more labels
+  - append to train only. test stays these 100 forever so scores stay comparable
+  - rerun the learning curve after, if the curve flattens, stop labelling
